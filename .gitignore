@@ -13,3 +13,4 @@
 .env.backup
 /.idea
 /.vscode
+/docker/db/data

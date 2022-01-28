@@ -1,18 +1,21 @@
 <?php
 
-namespace App\Entity;
+namespace App\Domain\Entity;
 
-use App\Repository\UserRepository;
+use App\Application\Contracts\GenericIdInterface;
+use App\Infrastructure\Repository\UserRepository;
+use App\Infrastructure\Support\GuidBasedImmutableId;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ORM\Table(name: '`user`')]
+#[ORM\Table(name: '`users`')]
 #[ORM\HasLifecycleCallbacks]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+final class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     use TimestampableEntity;
 
@@ -32,9 +35,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string')]
     private string $password;
 
-    public function getId(): ?string
+    public function getId(): GenericIdInterface
     {
-        return $this->id;
+        return GuidBasedImmutableId::of((string) $this->id);
+    }
+
+    public function setId(GenericIdInterface $id): self
+    {
+        $this->id = Uuid::fromString((string) $id);
+        return $this;
     }
 
     public function getUsername(): ?string

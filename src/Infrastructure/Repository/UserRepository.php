@@ -2,8 +2,13 @@
 
 namespace App\Infrastructure\Repository;
 
+use App\Domain\Contracts\CustomerRepositoryInterface;
 use App\Domain\Entity\User;
+use App\Infrastructure\Exceptions\AuthenticationFailedException;
+use App\Infrastructure\Exceptions\UserExistsException;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -15,7 +20,7 @@ use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
  * @method User[]    findAll()
  * @method User[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
+class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface, CustomerRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
@@ -35,6 +40,38 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->_em->persist($user);
         $this->_em->flush();
     }
+
+    public function persistUnique(User $user): User
+    {
+        try {
+            $this->_em->persist($user);
+            $this->_em->flush();
+            return $user;
+        } catch (UniqueConstraintViolationException $exception) {
+            throw new UserExistsException('User with given identity already exists');
+        }
+    }
+
+    public function findByCredentialsOrFail(string $identity, string $password): User
+    {
+        try {
+            /** @var User $user */
+            $user = $this->createQueryBuilder('u')
+                ->andWhere('u.username = :identity')
+                ->setParameter('identity', $identity)
+                ->getQuery()
+                ->getOneOrNullResult();
+            if (password_verify($password, $user->getPassword())) {
+                return $user;
+            }
+            throw new AuthenticationFailedException('Unknown credentials');
+        } catch (NonUniqueResultException) {
+            throw new AuthenticationFailedException('Unknown credentials');
+        }
+
+    }
+
+
 
     // /**
     //  * @return User[] Returns an array of User objects

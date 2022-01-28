@@ -6,7 +6,7 @@ use App\Config\Routing\RouteName;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
-
+#[Route('/api/v1/customer')]
 class CustomerController extends ApiController
 {
     #[Route('/register', name: RouteName::REGISTER)]

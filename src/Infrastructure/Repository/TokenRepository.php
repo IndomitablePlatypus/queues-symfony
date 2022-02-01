@@ -2,50 +2,57 @@
 
 namespace App\Infrastructure\Repository;
 
+use App\Domain\Contracts\TokenRepositoryInterface;
 use App\Domain\Entity\Token;
 use App\Domain\Entity\User;
+use App\Infrastructure\Exceptions\AuthenticationFailedException;
+use App\Infrastructure\Exceptions\ParameterAssertionException;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-/**
- * @method Token|null find($id, $lockMode = null, $lockVersion = null)
- * @method Token|null findOneBy(array $criteria, array $orderBy = null)
- * @method Token[]    findAll()
- * @method Token[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
- */
-class TokenRepository extends ServiceEntityRepository
+class TokenRepository extends ServiceEntityRepository implements TokenRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, User::class);
+        parent::__construct($registry, Token::class);
     }
 
-    // /**
-    //  * @return User[] Returns an array of User objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function getToken(string $plainTextToken): Token
     {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('u.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        /** @var Token $token */
+        $token = $this->find($this->getIdFromPlainTextToken($plainTextToken));
+        if (password_verify($this->getTokenStringFromPlainTextToken($plainTextToken), $token->getToken())) {
+            return $token;
+        }
+        throw new AuthenticationFailedException('Unknown token');
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?User
+    public function setToken(User $user, string $name): Token
     {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        $token = Token::create($user->getId(), $name);
+        $this->_em->persist($token);
+        $this->_em->flush();
+        return $token;
     }
-    */
+
+    protected function getIdFromPlainTextToken(string $plainTextToken): int
+    {
+        $parts = explode(Token::TOKEN_SEPARATOR, $plainTextToken);
+        $id = array_shift($parts);
+        if (!is_int($id)) {
+            throw new ParameterAssertionException('Invalid token format');
+        }
+        return $id;
+    }
+
+    protected function getTokenStringFromPlainTextToken(string $plainTextToken): int
+    {
+        $parts = explode(Token::TOKEN_SEPARATOR, $plainTextToken);
+        $token = array_pop($parts);
+        if (empty($token)) {
+            throw new ParameterAssertionException('Invalid token format');
+        }
+        return $token;
+    }
+
 }

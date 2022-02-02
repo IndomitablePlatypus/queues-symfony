@@ -11,10 +11,9 @@ use App\Infrastructure\Support\GuidBasedImmutableId;
 class CustomerService
 {
     public function __construct(
-        private CustomerRepositoryInterface $customerRepository,
-        private TokenRepositoryInterface $tokenRepository,
-    )
-    {
+        protected CustomerRepositoryInterface $customerRepository,
+        protected TokenRepositoryInterface $tokenRepository,
+    ) {
     }
 
     public function register(string $identity, string $name, string $password, string $deviceName): Token

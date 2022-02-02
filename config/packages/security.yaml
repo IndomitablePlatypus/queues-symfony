@@ -21,6 +21,8 @@ security:
             lazy: true
             provider: app_user_provider
             stateless: true
+            custom_authenticators:
+                - App\Infrastructure\Security\ApiKeyAuthenticator
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
@@ -31,8 +33,10 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/$, allow_if: "'%kernel.environment%' === 'dev'" }
+        - { path: ^/api/v1/customer/register, roles: PUBLIC_ACCESS }
+        - { path: ^/api/v1/customer/get-token, roles: PUBLIC_ACCESS }
+        - { path: ^/api/v1, roles: IS_AUTHENTICATED_FULLY }
 
 when@test:
     security:

@@ -2,9 +2,11 @@
 
 namespace App\Infrastructure\Repository;
 
+use App\Application\Contracts\GenericIdInterface;
 use App\Domain\Contracts\CustomerRepositoryInterface;
 use App\Domain\Entity\User;
 use App\Infrastructure\Exceptions\AuthenticationFailedException;
+use App\Infrastructure\Exceptions\NotFoundException;
 use App\Infrastructure\Exceptions\UserExistsException;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
@@ -71,7 +73,10 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
     }
 
-
+    public function getById(GenericIdInterface $id): user
+    {
+        return $this->find($id) ?? throw new NotFoundException("User $id not found");
+    }
 
     // /**
     //  * @return User[] Returns an array of User objects

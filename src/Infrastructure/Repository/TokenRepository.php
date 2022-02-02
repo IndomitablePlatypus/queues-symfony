@@ -5,7 +5,7 @@ namespace App\Infrastructure\Repository;
 use App\Domain\Contracts\TokenRepositoryInterface;
 use App\Domain\Entity\Token;
 use App\Domain\Entity\User;
-use App\Infrastructure\Exceptions\AuthenticationFailedException;
+use App\Infrastructure\Exceptions\NotFoundException;
 use App\Infrastructure\Exceptions\ParameterAssertionException;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -24,7 +24,7 @@ class TokenRepository extends ServiceEntityRepository implements TokenRepository
         if (password_verify($this->getTokenStringFromPlainTextToken($plainTextToken), $token->getToken())) {
             return $token;
         }
-        throw new AuthenticationFailedException('Unknown token');
+        throw new NotFoundException('Unknown token');
     }
 
     public function setToken(User $user, string $name): Token
@@ -35,17 +35,17 @@ class TokenRepository extends ServiceEntityRepository implements TokenRepository
         return $token;
     }
 
-    protected function getIdFromPlainTextToken(string $plainTextToken): int
+    protected function getIdFromPlainTextToken(string $plainTextToken): string
     {
         $parts = explode(Token::TOKEN_SEPARATOR, $plainTextToken);
         $id = array_shift($parts);
-        if (!is_int($id)) {
+        if (empty($id)) {
             throw new ParameterAssertionException('Invalid token format');
         }
         return $id;
     }
 
-    protected function getTokenStringFromPlainTextToken(string $plainTextToken): int
+    protected function getTokenStringFromPlainTextToken(string $plainTextToken): string
     {
         $parts = explode(Token::TOKEN_SEPARATOR, $plainTextToken);
         $token = array_pop($parts);

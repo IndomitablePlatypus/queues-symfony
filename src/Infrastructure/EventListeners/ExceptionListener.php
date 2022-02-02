@@ -1,11 +1,13 @@
 <?php
 
-namespace App\Application\EventListeners;
+namespace App\Infrastructure\EventListeners;
 
 use App\Infrastructure\Exceptions\AuthenticationFailedException;
 use App\Infrastructure\Exceptions\LogicException;
 use App\Infrastructure\Exceptions\ParameterAssertionException;
 use App\Infrastructure\Exceptions\ValidationException;
+use JsonSerializable;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -17,6 +19,10 @@ use Throwable;
 
 class ExceptionListener
 {
+    public function __construct(private string $applicationMode)
+    {
+    }
+
     public function onKernelException(ExceptionEvent $event): void
     {
         $exception = $event->getThrowable();
@@ -30,7 +36,7 @@ class ExceptionListener
             $exception instanceof HttpException => $this->getResponse($exception, $exception->getStatusCode()),
             $exception instanceof AuthenticationException => $this->getResponse($exception, Response::HTTP_UNAUTHORIZED, 'Check access token'),
             $exception instanceof AuthenticationFailedException => $this->getResponse($exception, Response::HTTP_UNAUTHORIZED),
-            $exception instanceof ValidationException => $this->getResponseForValidationException($exception),
+            $exception instanceof ValidationException => $this->getResponse($exception, Response::HTTP_UNPROCESSABLE_ENTITY),
             default => $this->getResponse($exception, Response::HTTP_INTERNAL_SERVER_ERROR),
         };
 
@@ -39,20 +45,16 @@ class ExceptionListener
 
     protected function getResponse(Throwable $exception, int $code, string $messageOverride = null): Response
     {
-        $response = new Response();
-        $response->setContent(json_encode(['message' => $messageOverride ?? $exception->getMessage()]));
-        $response->setStatusCode($code);
-        $response->headers->add(['content-type' => 'application/json']);
-        return $response;
-    }
+        if ($exception instanceof JsonSerializable || is_callable([$exception, 'jsonSerialize'])) {
+            $data = $exception->jsonSerialize();
+        }
+        $data ??= ['message' => $messageOverride ?? $exception->getMessage()];
 
-    protected function getResponseForValidationException(ValidationException $validationException): Response
-    {
-        $response = new Response();
-        $response->setContent(json_encode($validationException));
-        $response->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
-        $response->headers->add(['content-type' => 'application/json']);
-        return $response;
+        if (in_array($this->applicationMode, ['dev', 'debug']))
+        {
+            $data['exception'] = explode(PHP_EOL, (string) $exception);
+        }
+        return new JsonResponse($data, $code);
     }
 
 }

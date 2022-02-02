@@ -2,8 +2,10 @@
 
 namespace App\Domain\Entity;
 
+use App\Application\Contracts\GenericIdInterface;
 use App\Infrastructure\Exceptions\LogicException;
 use App\Infrastructure\Repository\TokenRepository;
+use App\Infrastructure\Support\GuidBasedImmutableId;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
@@ -30,7 +32,7 @@ class Token
     #[ORM\Column(type: 'string', length: 255)]
     private string $name;
 
-    public static function create(string $userId, string $name): static
+    public static function create(GenericIdInterface $userId, string $name): static
     {
         return (new static(static::generateTokenString()))
             ->setUserId($userId)
@@ -47,14 +49,14 @@ class Token
         return $this->id;
     }
 
-    public function getUserId(): string
+    public function getUserId(): GenericIdInterface
     {
-        return $this->userId;
+        return GuidBasedImmutableId::of($this->userId);
     }
 
-    public function setUserId(string $userId): static
+    public function setUserId(GenericIdInterface $userId): static
     {
-        $this->userId = $userId;
+        $this->userId = (string) $userId;
         return $this;
     }
 

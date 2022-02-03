@@ -7,6 +7,7 @@ use App\Infrastructure\Repository\UserRepository;
 use App\Infrastructure\Support\GuidBasedImmutableId;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use JetBrains\PhpStorm\ArrayShape;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -112,6 +113,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->name = $name;
 
         return $this;
+    }
+
+    #[ArrayShape(['profileId' => "string", 'name' => "string", 'phone' => "string"])]
+    public function profile(): array
+    {
+        return [
+            'profileId' => (string) $this->id,
+            'name' => $this->name,
+            'phone' => $this->username,
+        ];
     }
 
     /**

@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/api/v1/customer')]
 class CustomerGetIdController extends ApiController
 {
-    #[Route('/get-id', name: RouteName::CUSTOMER_ID, methods: ['GET'])]
+    #[Route('/id', name: RouteName::CUSTOMER_ID, methods: ['GET'])]
     public function getId(): JsonResponse
     {
         return $this->respond((string) $this->getUser()?->getId());

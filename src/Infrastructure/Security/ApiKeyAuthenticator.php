@@ -53,7 +53,7 @@ class ApiKeyAuthenticator extends AbstractAuthenticator
         preg_match(static::HEADER_FORMAT, $tokenHeader, $matches);
         $token = array_pop($matches);
         if (empty($token)) {
-            throw new AuthenticationFailedException('Token not found');
+            throw new AuthenticationFailedException('Invalid token format');
         }
         return $token;
     }

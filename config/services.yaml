@@ -19,6 +19,7 @@ services:
         exclude:
             - '../src/DependencyInjection/'
             - '../src/Domain/Entity/'
+            - '../src/Domain/Dto/'
             - '../src/Infrastructure/Exceptions/'
             - '../src/Infrastructure/Support/'
             - '../src/Kernel.php'

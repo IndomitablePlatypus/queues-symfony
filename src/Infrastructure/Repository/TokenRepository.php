@@ -27,7 +27,7 @@ class TokenRepository extends ServiceEntityRepository implements TokenRepository
         throw new NotFoundException('Unknown token');
     }
 
-    public function setToken(User $user, string $name): Token
+    public function newToken(User $user, string $name): Token
     {
         $token = Token::create($user->getId(), $name);
         $this->_em->persist($token);

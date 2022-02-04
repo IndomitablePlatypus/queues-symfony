@@ -6,11 +6,14 @@ use App\Application\Contracts\GenericIdInterface;
 use App\Infrastructure\Exceptions\LogicException;
 use App\Infrastructure\Repository\TokenRepository;
 use App\Infrastructure\Support\GuidBasedImmutableId;
+use App\Infrastructure\Support\StringHelper;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 #[ORM\Entity(repositoryClass: TokenRepository::class)]
 #[ORM\Table(name: '`tokens`')]
+#[ORM\Index(fields: ["userId"])]
+#[ORM\Index(fields: ["name"])]
 #[ORM\HasLifecycleCallbacks]
 class Token
 {
@@ -32,16 +35,16 @@ class Token
     #[ORM\Column(type: 'string', length: 255)]
     private string $name;
 
-    public static function create(GenericIdInterface $userId, string $name): static
-    {
-        return (new static(static::generateTokenString()))
-            ->setUserId($userId)
-            ->setName($name);
-    }
-
-    public function __construct(private string $tokenString)
+    private function __construct(private string $tokenString)
     {
         $this->token = password_hash($this->tokenString, PASSWORD_DEFAULT);
+    }
+
+    public static function create(GenericIdInterface $userId, string $name): static
+    {
+        return (new static(StringHelper::random(40)))
+            ->setUserId($userId)
+            ->setName($name);
     }
 
     public function getId(): string
@@ -82,16 +85,5 @@ class Token
             throw new LogicException('Unable to obtain token');
         }
         return implode(static::TOKEN_SEPARATOR, [$this->getId(), $this->tokenString]);
-    }
-
-    protected static function generateTokenString(int $length = 40): string
-    {
-        $string = '';
-        while (($len = strlen($string)) < $length) {
-            $size = $length - $len;
-            $bytes = random_bytes($size);
-            $string .= substr(str_replace(['/', '+', '='], '', base64_encode($bytes)), 0, $size);
-        }
-        return $string;
     }
 }

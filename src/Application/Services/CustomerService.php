@@ -26,13 +26,13 @@ class CustomerService
                 ->setPassword($password)
         );
 
-        return $this->tokenRepository->setToken($customer, $deviceName);
+        return $this->tokenRepository->newToken($customer, $deviceName);
     }
 
     public function getToken(string $identity, string $password, string $deviceName): Token
     {
         $customer = $this->customerRepository->findByCredentialsOrFail($identity, $password);
 
-        return $this->tokenRepository->setToken($customer, $deviceName);
+        return $this->tokenRepository->newToken($customer, $deviceName);
     }
 }

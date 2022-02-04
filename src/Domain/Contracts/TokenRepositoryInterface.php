@@ -9,5 +9,5 @@ interface TokenRepositoryInterface
 {
     public function getToken(string $plainTextToken): Token;
 
-    public function setToken(User $user, string $name): Token;
+    public function newToken(User $user, string $name): Token;
 }

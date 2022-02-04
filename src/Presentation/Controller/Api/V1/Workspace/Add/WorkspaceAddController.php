@@ -15,7 +15,7 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
 class WorkspaceAddController extends ApiController
 {
     #[Route('/', name: RouteName::ADD_WORKSPACE, methods: ['POST'])]
-    public function register(
+    public function add(
         Request $request,
         WorkspaceService $workspaceService,
         ConstraintViolationListInterface $validationErrors

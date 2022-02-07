@@ -8,6 +8,8 @@ use App\Infrastructure\Repository\WorkspaceRepository;
 use App\Infrastructure\Support\ArrayPresenterTrait;
 use App\Infrastructure\Support\GuidBasedImmutableId;
 use Carbon\Carbon;
+use Cassandra\Date;
+use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
@@ -35,7 +37,7 @@ class Workspace
         private array $profile,
 
         #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-        private Carbon $addedAt,
+        private DateTime $addedAt,
     ) {
     }
 
@@ -48,7 +50,7 @@ class Workspace
             Uuid::fromString((string) $workspaceId),
             Uuid::fromString((string) $keeperId),
             $profile->toArray(),
-            Carbon::now(),
+            Carbon::now()->toDateTime(),
         );
     }
 
@@ -87,12 +89,12 @@ class Workspace
 
     public function getAddedAt(): Carbon
     {
-        return $this->addedAt;
+        return Carbon::instance($this->addedAt);
     }
 
     public function setAddedAt(Carbon $addedAt): Workspace
     {
-        $this->addedAt = $addedAt;
+        $this->addedAt = $addedAt->toDateTime();
         return $this;
     }
 }

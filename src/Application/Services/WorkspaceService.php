@@ -23,4 +23,14 @@ class WorkspaceService
         );
         return $this->workspaceRepository->persist($workspace);
     }
+
+    public function changeProfile(string $workspaceId, string $name, string $description, string $address): Workspace
+    {
+        return $this->workspaceRepository->persist(
+            $this
+                ->workspaceRepository
+                ->take(GuidBasedImmutableId::of($workspaceId))
+                ->setProfile(WorkspaceProfile::of($name, $description, $address))
+        );
+    }
 }

@@ -3,13 +3,14 @@
 namespace App\Domain\Entity;
 
 use App\Application\Contracts\GenericIdInterface;
+use App\Domain\Dto\PlanProfile;
 use App\Domain\Dto\WorkspaceProfile;
 use App\Infrastructure\Repository\WorkspaceRepository;
 use App\Infrastructure\Support\ArrayPresenterTrait;
 use App\Infrastructure\Support\GuidBasedImmutableId;
 use Carbon\Carbon;
-use Cassandra\Date;
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
@@ -38,6 +39,9 @@ class Workspace
 
         #[ORM\Column(type: Types::DATETIME_MUTABLE)]
         private DateTime $addedAt,
+
+        #[ORM\OneToMany(mappedBy: "workspace", targetEntity: "Plan")]
+        private ArrayCollection $plans,
     ) {
     }
 
@@ -51,6 +55,7 @@ class Workspace
             Uuid::fromString((string) $keeperId),
             $profile->toArray(),
             Carbon::now()->toDateTime(),
+            new ArrayCollection(),
         );
     }
 
@@ -81,20 +86,19 @@ class Workspace
         return WorkspaceProfile::fromArray($this->profile);
     }
 
-    public function setProfile(WorkspaceProfile $profile): Workspace
+    public function setProfile(WorkspaceProfile $profile): self
     {
         $this->profile = $profile->toArray();
         return $this;
     }
 
-    public function getAddedAt(): Carbon
+    public function getPlans(): ArrayCollection
     {
-        return Carbon::instance($this->addedAt);
+        return $this->plans;
     }
 
-    public function setAddedAt(Carbon $addedAt): Workspace
+    public function addPlan(GenericIdInterface $planId, PlanProfile $planProfile): Plan
     {
-        $this->addedAt = $addedAt->toDateTime();
-        return $this;
+        return $this->plans[] = Plan::create($planId, $this->getId(), $planProfile);
     }
 }

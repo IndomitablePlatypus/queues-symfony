@@ -7,6 +7,7 @@ use App\Domain\Dto\PlanProfile;
 use App\Domain\Dto\WorkspaceProfile;
 use App\Infrastructure\Repository\WorkspaceRepository;
 use App\Infrastructure\Support\ArrayPresenterTrait;
+use App\Infrastructure\Support\CarbonWrap;
 use App\Infrastructure\Support\GuidBasedImmutableId;
 use Carbon\Carbon;
 use DateTime;
@@ -19,20 +20,20 @@ use Ramsey\Uuid\UuidInterface;
 
 #[ORM\Entity(repositoryClass: WorkspaceRepository::class)]
 #[ORM\Table(name: '`workspaces`')]
-#[ORM\Index(fields: ["keeperId"])]
 #[ORM\Index(fields: ["addedAt"])]
 #[ORM\HasLifecycleCallbacks]
 class Workspace
 {
-    use TimestampableEntity, ArrayPresenterTrait;
+    use TimestampableEntity, ArrayPresenterTrait, CarbonWrap;
 
     private function __construct(
         #[ORM\Id]
         #[ORM\Column(type: 'uuid')]
         private UuidInterface $id,
 
-        #[ORM\Column(type: 'uuid')]
-        private UuidInterface $keeperId,
+        #[ORM\ManyToOne(targetEntity: "User", inversedBy: "workspaces")]
+        #[ORM\JoinColumn(name: "keeper_id", referencedColumnName: "id")]
+        private User $keeper,
 
         #[ORM\Column(type: Types::JSON, options: ["jsonb" => true])]
         private array $profile,
@@ -40,23 +41,24 @@ class Workspace
         #[ORM\Column(type: Types::DATETIME_MUTABLE)]
         private DateTime $addedAt,
 
+        /** @var ArrayCollection */
         #[ORM\OneToMany(mappedBy: "workspace", targetEntity: "Plan")]
-        private ArrayCollection $plans,
+        private $plans,
     ) {
     }
 
     public static function create(
         GenericIdInterface $workspaceId,
-        GenericIdInterface $keeperId,
+        User $keeper,
         WorkspaceProfile $profile,
     ): static {
-        return new static(
+        return (new static(
             Uuid::fromString((string) $workspaceId),
-            Uuid::fromString((string) $keeperId),
+            $keeper,
             $profile->toArray(),
-            Carbon::now()->toDateTime(),
+            self::now(),
             new ArrayCollection(),
-        );
+        ));
     }
 
     public function getId(): GenericIdInterface
@@ -72,13 +74,7 @@ class Workspace
 
     public function getKeeperId(): GenericIdInterface
     {
-        return GuidBasedImmutableId::of((string) $this->keeperId);
-    }
-
-    public function setKeeperId(GenericIdInterface $keeperId): self
-    {
-        $this->keeperId = Uuid::fromString((string) $keeperId);
-        return $this;
+        return $this->keeper->getId();
     }
 
     public function getProfile(): WorkspaceProfile
@@ -99,6 +95,6 @@ class Workspace
 
     public function addPlan(GenericIdInterface $planId, PlanProfile $planProfile): Plan
     {
-        return $this->plans[] = Plan::create($planId, $this->getId(), $planProfile);
+        return $this->plans[] = Plan::create($planId, $this, $planProfile);
     }
 }

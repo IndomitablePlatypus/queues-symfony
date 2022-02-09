@@ -9,6 +9,10 @@ class Request
     public function __construct(
         #[Assert\Type('string')]
         #[Assert\NotBlank]
+        public ?string $workspaceId,
+
+        #[Assert\Type('string')]
+        #[Assert\NotBlank]
         public ?string $name,
 
         #[Assert\Type('string')]

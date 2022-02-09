@@ -2,11 +2,11 @@
 
 namespace App\Presentation\Controller\Api\V1\Plan\Add;
 
-use App\Application\Services\WorkspaceService;
+use App\Application\Services\PlanService;
 use App\Config\Routing\RouteName;
 use App\Presentation\Controller\Api\V1\ApiController;
-use App\Presentation\Controller\Api\V1\Workspace\Add\Input\Request;
-use App\Presentation\Controller\Api\V1\Workspace\Output\BusinessWorkspace;
+use App\Presentation\Controller\Api\V1\Plan\Output\BusinessPlan;
+use App\Presentation\Controller\Api\V1\Plan\Add\Input\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
@@ -24,7 +24,7 @@ class PlanAddController extends ApiController
 
         return $this->respond(BusinessPlan::of(
             $planService->add(
-                (string) $this->getUser()?->getId(),
+                $request->workspaceId,
                 $request->name,
                 $request->description,
             )

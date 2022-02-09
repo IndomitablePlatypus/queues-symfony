@@ -9,6 +9,7 @@ use App\Infrastructure\Exceptions\ParameterAssertionException;
 use App\Infrastructure\Repository\PlanRepository;
 use App\Infrastructure\Support\ArrayPresenterTrait;
 use App\Infrastructure\Support\GuidBasedImmutableId;
+use App\Infrastructure\Support\CarbonWrap;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\DBAL\Types\Types;
@@ -29,19 +30,16 @@ use Throwable;
 #[ORM\HasLifecycleCallbacks]
 class Plan
 {
-    use TimestampableEntity, ArrayPresenterTrait;
-
-    #[ORM\ManyToOne(targetEntity: "Workspace", inversedBy: "plans")]
-    #[ORM\JoinColumn(name: "workspace_id", referencedColumnName: "id")]
-    private Workspace $workspace;
+    use TimestampableEntity, ArrayPresenterTrait, CarbonWrap;
 
     private function __construct(
         #[ORM\Id]
         #[ORM\Column(type: 'uuid')]
         private UuidInterface $id,
 
-        #[ORM\Column(type: 'uuid')]
-        private UuidInterface $workspaceId,
+        #[ORM\ManyToOne(targetEntity: "Workspace", inversedBy: "plans")]
+        #[ORM\JoinColumn(name: "workspace_id", referencedColumnName: "id")]
+        private Workspace $workspace,
 
         #[ORM\Column(type: Types::JSON, options: ["jsonb" => true])]
         private array $profile,
@@ -65,12 +63,12 @@ class Plan
 
     public static function create(
         GenericIdInterface $planId,
-        GenericIdInterface $workspaceId,
+        Workspace $workspace,
         PlanProfile $profile,
     ): static {
         return new static(
             Uuid::fromString((string) $planId),
-            Uuid::fromString((string) $workspaceId),
+            $workspace,
             $profile->toArray(),
             Carbon::now()->toDateTime(),
         );
@@ -89,13 +87,7 @@ class Plan
 
     public function getWorkspaceId(): GenericIdInterface
     {
-        return GuidBasedImmutableId::of((string) $this->workspaceId);
-    }
-
-    public function setWorkspaceId(GenericIdInterface $workspaceId): self
-    {
-        $this->workspaceId = Uuid::fromString((string) $workspaceId);
-        return $this;
+        return $this->workspace->getId();
     }
 
     public function getProfile(): PlanProfile
@@ -111,22 +103,22 @@ class Plan
 
     public function getLaunchedAt(): ?Carbon
     {
-        return Carbon::instance($this->launchedAt);
+        return self::carbonOrNull($this->launchedAt);
     }
 
     public function getStoppedAt(): ?Carbon
     {
-        return Carbon::instance($this->stoppedAt);
+        return self::carbonOrNull($this->stoppedAt);
     }
 
     public function getArchivedAt(): ?Carbon
     {
-        return Carbon::instance($this->archivedAt);
+        return self::carbonOrNull($this->archivedAt);
     }
 
-    public function getExpitationDate(): ?Carbon
+    public function getExpirationDate(): ?Carbon
     {
-        return Carbon::instance($this->expirationDate);
+        return self::carbonOrNull($this->expirationDate);
     }
 
     public function launch(string $expirationDate): static
@@ -135,12 +127,12 @@ class Plan
             throw new LogicException('Cannot launch archived plan');
         }
         try {
-            $this->expirationDate = new Carbon($expirationDate);
+            $this->expirationDate = self::dateOf($expirationDate);
         } catch (Throwable) {
             throw new ParameterAssertionException("Expiration date should be a valid date");
         }
 
-        $this->launchedAt = Carbon::now();
+        $this->launchedAt = self::now();
         $this->stoppedAt = null;
         return $this;
     }
@@ -150,7 +142,7 @@ class Plan
         if ($this->archivedAt) {
             throw new LogicException('Cannot stop archived plan');
         }
-        $this->stoppedAt = Carbon::now();
+        $this->stoppedAt = self::now();
         $this->launchedAt = null;
         $this->expirationDate = null;
         return $this;
@@ -158,7 +150,7 @@ class Plan
 
     public function archive(): static
     {
-        $this->archivedAt = Carbon::now();
+        $this->archivedAt = self::now();
         return $this;
     }
 

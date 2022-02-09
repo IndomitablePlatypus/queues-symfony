@@ -26,7 +26,7 @@ class BusinessPlan implements JsonSerializable
             'isLaunched' => $this->plan->getLaunchedAt() !== null,
             'isStopped' => $this->plan->getStoppedAt() !== null,
             'isArchived' => $this->plan->getArchivedAt() !== null,
-            'expirationDate' => $this->plan->getExpitationDate(),
+            'expirationDate' => $this->plan->getExpirationDate(),
         ];
     }
 

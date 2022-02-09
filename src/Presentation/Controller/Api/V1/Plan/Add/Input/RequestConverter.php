@@ -11,6 +11,7 @@ class RequestConverter extends BaseRequestConverter
     public function apply(HttpRequest $httpRequest, ParamConverter $configuration): bool
     {
         $request = new Request(
+            $httpRequest->attributes->get('workspaceId'),
             $httpRequest->request->get('name'),
             $httpRequest->request->get('description'),
         );

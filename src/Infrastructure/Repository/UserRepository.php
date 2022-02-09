@@ -4,6 +4,7 @@ namespace App\Infrastructure\Repository;
 
 use App\Application\Contracts\GenericIdInterface;
 use App\Domain\Contracts\CustomerRepositoryInterface;
+use App\Domain\Contracts\KeeperRepositoryInterface;
 use App\Domain\Entity\User;
 use App\Infrastructure\Exceptions\AuthenticationFailedException;
 use App\Infrastructure\Exceptions\NotFoundException;
@@ -22,7 +23,13 @@ use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
  * @method User[]    findAll()
  * @method User[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface, CustomerRepositoryInterface
+class UserRepository
+    extends
+    ServiceEntityRepository
+    implements
+    PasswordUpgraderInterface,
+    CustomerRepositoryInterface,
+    KeeperRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
@@ -70,7 +77,11 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         } catch (NonUniqueResultException) {
             throw new AuthenticationFailedException('Unknown credentials');
         }
+    }
 
+    public function take(GenericIdInterface $keeperId): User
+    {
+        return $this->getById($keeperId);
     }
 
     public function getById(GenericIdInterface $id): user

@@ -3,8 +3,11 @@
 namespace App\Domain\Entity;
 
 use App\Application\Contracts\GenericIdInterface;
+use App\Domain\Dto\PlanProfile;
+use App\Domain\Dto\WorkspaceProfile;
 use App\Infrastructure\Repository\UserRepository;
 use App\Infrastructure\Support\GuidBasedImmutableId;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use JetBrains\PhpStorm\ArrayShape;
@@ -35,6 +38,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'string')]
     private string $password;
+
+    /** @var ArrayCollection */
+    #[ORM\OneToMany(mappedBy: "keeper", targetEntity: "Workspace")]
+    private $workspaces;
 
     public function getId(): GenericIdInterface
     {
@@ -123,6 +130,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             'name' => $this->name,
             'phone' => $this->username,
         ];
+    }
+
+    public function getWorkspaces(): ArrayCollection
+    {
+        return $this->workspaces;
+    }
+
+    public function addWorkspace(GenericIdInterface $workspaceId, WorkspaceProfile $workspaceProfile): Workspace
+    {
+        return $this->workspaces[] = Workspace::create($workspaceId, $this, $workspaceProfile);
     }
 
     /**

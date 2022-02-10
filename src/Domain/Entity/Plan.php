@@ -5,13 +5,17 @@ namespace App\Domain\Entity;
 use App\Application\Contracts\GenericIdInterface;
 use App\Domain\Dto\PlanProfile;
 use App\Infrastructure\Exceptions\LogicException;
+use App\Infrastructure\Exceptions\NotFoundException;
 use App\Infrastructure\Exceptions\ParameterAssertionException;
 use App\Infrastructure\Repository\PlanRepository;
 use App\Infrastructure\Support\ArrayPresenterTrait;
-use App\Infrastructure\Support\GuidBasedImmutableId;
 use App\Infrastructure\Support\CarbonWrap;
+use App\Infrastructure\Support\GuidBasedImmutableId;
 use Carbon\Carbon;
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
@@ -47,6 +51,9 @@ class Plan
         #[ORM\Column(type: Types::DATETIME_MUTABLE)]
         private DateTime $addedAt,
 
+        #[ORM\OneToMany(mappedBy: "plan", targetEntity: "Requirement")]
+        private Collection $requirements,
+
         #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
         private ?DateTime $launchedAt = null,
 
@@ -66,11 +73,12 @@ class Plan
         Workspace $workspace,
         PlanProfile $profile,
     ): static {
-        return new static(
+        return new self(
             Uuid::fromString((string) $planId),
             $workspace,
             $profile->toArray(),
-            Carbon::now()->toDateTime(),
+            self::now(),
+            new ArrayCollection(),
         );
     }
 
@@ -152,6 +160,31 @@ class Plan
     {
         $this->archivedAt = self::now();
         return $this;
+    }
+
+    public function getCompactRequirements(): Collection
+    {
+        return $this
+            ->requirements
+            ->matching(Criteria::create()->where(Criteria::expr()?->eq('removedAt', null)))
+            ->map(fn(Requirement $requirement) => $requirement->toCompactArray());
+    }
+
+    public function getRequirement(GenericIdInterface $requirementId): Requirement
+    {
+        $requirement = $this->requirements->matching(
+            Criteria::create()
+                ->where(Criteria::expr()?->eq('id', (string) $requirementId))
+                ->andWhere(Criteria::expr()?->eq('removedAt', null))
+        )->first();
+        return $requirement instanceof Requirement
+            ? $requirement
+            : throw new NotFoundException("Requirement $requirementId not found");
+    }
+
+    public function addRequirement(GenericIdInterface $requirementId, string $description): Requirement
+    {
+        return $this->requirements[] = Requirement::create($requirementId, $this, $description);
     }
 
 }

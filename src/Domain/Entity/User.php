@@ -41,9 +41,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string')]
     private string $password;
 
-    /** @var ArrayCollection */
     #[ORM\OneToMany(mappedBy: "keeper", targetEntity: "Workspace")]
-    private $workspaces;
+    private Collection $workspaces;
 
     public function getId(): GenericIdInterface
     {

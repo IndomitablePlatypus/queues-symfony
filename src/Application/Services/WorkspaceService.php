@@ -3,7 +3,6 @@
 namespace App\Application\Services;
 
 use App\Application\Contracts\GenericIdInterface;
-use App\Domain\Contracts\KeeperRepositoryInterface;
 use App\Domain\Contracts\WorkspaceRepositoryInterface;
 use App\Domain\Dto\WorkspaceProfile;
 use App\Domain\Entity\User;
@@ -11,10 +10,8 @@ use App\Domain\Entity\Workspace;
 
 class WorkspaceService
 {
-    public function __construct(
-        protected KeeperRepositoryInterface $keeperRepository,
-        protected WorkspaceRepositoryInterface $workspaceRepository,
-    ) {
+    public function __construct(protected WorkspaceRepositoryInterface $workspaceRepository)
+    {
     }
 
     public function add(User $keeper, GenericIdInterface $workspaceId, WorkspaceProfile $profile): Workspace

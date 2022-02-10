@@ -43,9 +43,8 @@ class Workspace
         #[ORM\Column(type: Types::DATETIME_MUTABLE)]
         private DateTime $addedAt,
 
-        /** @var ArrayCollection */
         #[ORM\OneToMany(mappedBy: "workspace", targetEntity: "Plan")]
-        private $plans,
+        private Collection $plans,
     ) {
     }
 

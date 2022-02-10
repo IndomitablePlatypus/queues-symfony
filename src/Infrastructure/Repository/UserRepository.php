@@ -4,7 +4,6 @@ namespace App\Infrastructure\Repository;
 
 use App\Application\Contracts\GenericIdInterface;
 use App\Domain\Contracts\CustomerRepositoryInterface;
-use App\Domain\Contracts\KeeperRepositoryInterface;
 use App\Domain\Entity\User;
 use App\Infrastructure\Exceptions\AuthenticationFailedException;
 use App\Infrastructure\Exceptions\NotFoundException;
@@ -28,8 +27,7 @@ class UserRepository
     ServiceEntityRepository
     implements
     PasswordUpgraderInterface,
-    CustomerRepositoryInterface,
-    KeeperRepositoryInterface
+    CustomerRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
@@ -77,11 +75,6 @@ class UserRepository
         } catch (NonUniqueResultException) {
             throw new AuthenticationFailedException('Unknown credentials');
         }
-    }
-
-    public function take(GenericIdInterface $keeperId): User
-    {
-        return $this->getById($keeperId);
     }
 
     public function getById(GenericIdInterface $id): user

@@ -23,10 +23,13 @@ class WorkspaceRepository extends ServiceEntityRepository implements WorkspaceRe
         return $workspace;
     }
 
-    public function take(GenericIdInterface $workspaceId): Workspace
+    public function take($keeper, GenericIdInterface $workspaceId): Workspace
     {
         /** @var Workspace $workspace */
-        $workspace = $this->find($workspaceId);
+        $workspace = $this->findOneBy([
+            'keeper' => $keeper,
+            'id' => (string) $workspaceId,
+        ]);
         return $workspace ?? throw new NotFoundException("Workspace $workspaceId not found");
     }
 

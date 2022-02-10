@@ -4,6 +4,7 @@ namespace App\Presentation\Controller\Api\V1\Workspace\Add;
 
 use App\Application\Services\WorkspaceService;
 use App\Config\Routing\RouteName;
+use App\Domain\Dto\WorkspaceProfile;
 use App\Presentation\Controller\Api\V1\ApiController;
 use App\Presentation\Controller\Api\V1\Workspace\Add\Input\Request;
 use App\Presentation\Controller\Api\V1\Workspace\Output\BusinessWorkspace;
@@ -24,10 +25,9 @@ class WorkspaceAddController extends ApiController
 
         return $this->respond(BusinessWorkspace::of(
             $workspaceService->add(
-                (string) $this->getUser()?->getId(),
-                $request->name,
-                $request->description,
-                $request->address,
+                $this->getUser(),
+                $request->getWorkspaceId(),
+                $request->getProfile(),
             )
         ));
     }

@@ -24,10 +24,9 @@ class WorkspaceChangeProfileController extends ApiController
 
         return $this->respond(BusinessWorkspace::of(
             $workspaceService->changeProfile(
-                $request->workspaceId,
-                $request->name,
-                $request->description,
-                $request->address,
+                $this->getUser(),
+                $request->getWorkspaceId(),
+                $request->getProfile(),
             )
         ));
     }

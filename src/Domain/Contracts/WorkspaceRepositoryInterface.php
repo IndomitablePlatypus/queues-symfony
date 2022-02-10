@@ -9,6 +9,6 @@ interface WorkspaceRepositoryInterface
 {
     public function persist(Workspace $workspace): Workspace;
 
-    public function take(GenericIdInterface $workspaceId): Workspace;
+    public function take($keeper, GenericIdInterface $workspaceId): Workspace;
 
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Presentation\Controller\Api\V1\Plan\Add\Input;
+namespace App\Presentation\Controller\Api\V1\Plan\ChangeProfile\Input;
 
 use App\Infrastructure\Support\GuidBasedImmutableId;
 use App\Presentation\BaseRequestConverter;
@@ -13,7 +13,7 @@ class RequestConverter extends BaseRequestConverter
     {
         $request = new Request(
             $httpRequest->attributes->get('workspaceId'),
-            GuidBasedImmutableId::makeValue(),
+            $httpRequest->attributes->get('planId'),
             $httpRequest->request->get('name'),
             $httpRequest->request->get('description'),
         );

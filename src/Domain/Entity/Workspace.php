@@ -5,13 +5,15 @@ namespace App\Domain\Entity;
 use App\Application\Contracts\GenericIdInterface;
 use App\Domain\Dto\PlanProfile;
 use App\Domain\Dto\WorkspaceProfile;
+use App\Infrastructure\Exceptions\NotFoundException;
 use App\Infrastructure\Repository\WorkspaceRepository;
 use App\Infrastructure\Support\ArrayPresenterTrait;
 use App\Infrastructure\Support\CarbonWrap;
 use App\Infrastructure\Support\GuidBasedImmutableId;
-use Carbon\Carbon;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
@@ -88,9 +90,19 @@ class Workspace
         return $this;
     }
 
-    public function getPlans(): ArrayCollection
+    public function getPlans(): Collection
     {
         return $this->plans;
+    }
+
+    public function getPlan(GenericIdInterface $planId): Plan
+    {
+        $plan = $this->plans->matching(
+            Criteria::create()->where(Criteria::expr()?->eq('id', (string) $planId))
+        )->first();
+        return $plan instanceof Plan
+            ? $plan
+            : throw new NotFoundException("Plan $planId not found");
     }
 
     public function addPlan(GenericIdInterface $planId, PlanProfile $planProfile): Plan

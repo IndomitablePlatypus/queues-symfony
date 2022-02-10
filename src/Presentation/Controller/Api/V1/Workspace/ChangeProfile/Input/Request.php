@@ -2,27 +2,43 @@
 
 namespace App\Presentation\Controller\Api\V1\Workspace\ChangeProfile\Input;
 
+use App\Application\Contracts\GenericIdInterface;
+use App\Domain\Dto\WorkspaceProfile;
+use App\Infrastructure\Support\GuidBasedImmutableId;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class Request
+final class Request
 {
     public function __construct(
         #[Assert\Type('string')]
         #[Assert\NotBlank]
-        public ?string $workspaceId,
+        private  ?string $workspaceId,
 
         #[Assert\Type('string')]
         #[Assert\NotBlank]
-        public ?string $name,
+        private  ?string $name,
 
         #[Assert\Type('string')]
         #[Assert\NotBlank]
-        public ?string $description,
+        private  ?string $description,
 
         #[Assert\Type('string')]
         #[Assert\NotBlank]
-        public ?string $address,
+        private  ?string $address,
     ) {
     }
 
+    public function getWorkspaceId(): GenericIdInterface
+    {
+        return GuidBasedImmutableId::of($this->workspaceId);
+    }
+
+    public function getProfile(): WorkspaceProfile
+    {
+        return WorkspaceProfile::of(
+            $this->name,
+            $this->description,
+            $this->address,
+        );
+    }
 }

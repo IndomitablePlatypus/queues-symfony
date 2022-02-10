@@ -2,11 +2,12 @@
 
 namespace App\Application\Services;
 
+use App\Application\Contracts\GenericIdInterface;
 use App\Domain\Contracts\KeeperRepositoryInterface;
 use App\Domain\Contracts\WorkspaceRepositoryInterface;
 use App\Domain\Dto\WorkspaceProfile;
+use App\Domain\Entity\User;
 use App\Domain\Entity\Workspace;
-use App\Infrastructure\Support\GuidBasedImmutableId;
 
 class WorkspaceService
 {
@@ -16,24 +17,20 @@ class WorkspaceService
     ) {
     }
 
-    public function add(string $keeperId, string $name, string $description, string $address): Workspace
+    public function add(User $keeper, GenericIdInterface $workspaceId, WorkspaceProfile $profile): Workspace
     {
-        $keeper = $this->keeperRepository->take(GuidBasedImmutableId::of($keeperId));
         return $this->workspaceRepository->persist(
-            $keeper->addWorkspace(
-                GuidBasedImmutableId::make(),
-                WorkspaceProfile::of($name, $description, $address),
-            )
+            $keeper
+                ->addWorkspace($workspaceId, $profile)
         );
     }
 
-    public function changeProfile(string $workspaceId, string $name, string $description, string $address): Workspace
+    public function changeProfile(User $keeper, GenericIdInterface $workspaceId, WorkspaceProfile $profile): Workspace
     {
         return $this->workspaceRepository->persist(
-            $this
-                ->workspaceRepository
-                ->take(GuidBasedImmutableId::of($workspaceId))
-                ->setProfile(WorkspaceProfile::of($name, $description, $address))
+            $keeper
+                ->getWorkspace($workspaceId)
+                ->setProfile($profile)
         );
     }
 }

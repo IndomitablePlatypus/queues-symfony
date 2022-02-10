@@ -3,11 +3,13 @@
 namespace App\Domain\Entity;
 
 use App\Application\Contracts\GenericIdInterface;
-use App\Domain\Dto\PlanProfile;
 use App\Domain\Dto\WorkspaceProfile;
+use App\Infrastructure\Exceptions\NotFoundException;
 use App\Infrastructure\Repository\UserRepository;
 use App\Infrastructure\Support\GuidBasedImmutableId;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use JetBrains\PhpStorm\ArrayShape;
@@ -132,9 +134,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         ];
     }
 
-    public function getWorkspaces(): ArrayCollection
+    public function getWorkspaces(): Collection
     {
         return $this->workspaces;
+    }
+
+    public function getWorkspace(GenericIdInterface $workspaceId): Workspace
+    {
+        $workspace = $this->workspaces->matching(
+            Criteria::create()->where(Criteria::expr()?->eq('id', (string) $workspaceId))
+        )->first();
+        return $workspace instanceof Workspace
+            ? $workspace
+            : throw new NotFoundException("Workspace $workspaceId not found");
     }
 
     public function addWorkspace(GenericIdInterface $workspaceId, WorkspaceProfile $workspaceProfile): Workspace

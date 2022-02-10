@@ -2,12 +2,12 @@
 
 namespace App\Application\Services;
 
+use App\Application\Contracts\GenericIdInterface;
 use App\Domain\Contracts\PlanRepositoryInterface;
 use App\Domain\Contracts\WorkspaceRepositoryInterface;
 use App\Domain\Dto\PlanProfile;
-use App\Domain\Dto\WorkspaceProfile;
 use App\Domain\Entity\Plan;
-use App\Infrastructure\Support\GuidBasedImmutableId;
+use App\Domain\Entity\User;
 
 class PlanService
 {
@@ -17,20 +17,22 @@ class PlanService
     ) {
     }
 
-    public function add(string $workspaceId, string $name, string $description): Plan
+    public function add(User $keeper, GenericIdInterface $workspaceId, GenericIdInterface $planId, PlanProfile $profile): Plan
     {
-        $workspace = $this->workspaceRepository->take(GuidBasedImmutableId::of($workspaceId));
         return $this->planRepository->persist(
-            $workspace
-                ->addPlan(
-                    GuidBasedImmutableId::make(),
-                    PlanProfile::of($name, $description),
-                )
+            $keeper
+                ->getWorkspace($workspaceId)
+                ->addPlan($planId, $profile)
         );
     }
 
-    public function changeProfile(string $workspaceId, string $planId, string $name, string $description): Plan
+    public function changeProfile(User $keeper, GenericIdInterface $workspaceId, GenericIdInterface $planId, PlanProfile $profile): Plan
     {
-
+        return $this->planRepository->persist(
+            $keeper
+                ->getWorkspace($workspaceId)
+                ->getPlan($planId)
+                ->setProfile($profile)
+        );
     }
 }

@@ -2,10 +2,8 @@
 
 namespace App\Infrastructure\Repository;
 
-use App\Application\Contracts\GenericIdInterface;
 use App\Domain\Contracts\RequirementRepositoryInterface;
 use App\Domain\Entity\Requirement;
-use App\Infrastructure\Exceptions\NotFoundException;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -22,12 +20,4 @@ class RequirementRepository extends ServiceEntityRepository implements Requireme
         $this->_em->flush();
         return $requirement;
     }
-
-    public function take(GenericIdInterface $requirementId): Requirement
-    {
-        /** @var Requirement $requirement */
-        $requirement = $this->find($requirementId);
-        return $requirement ?? throw new NotFoundException("Requirement $requirementId not found");
-    }
-
 }

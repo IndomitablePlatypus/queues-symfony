@@ -7,7 +7,6 @@ use App\Domain\Dto\WorkspaceProfile;
 use App\Infrastructure\Exceptions\NotFoundException;
 use App\Infrastructure\Repository\UserRepository;
 use App\Infrastructure\Support\GuidBasedImmutableId;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
@@ -43,6 +42,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToMany(mappedBy: "keeper", targetEntity: "Workspace")]
     private Collection $workspaces;
+
+    #[ORM\OneToMany(mappedBy: "customer", targetEntity: "Card")]
+    private Collection $cards;
 
     public function getId(): GenericIdInterface
     {
@@ -151,6 +153,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function addWorkspace(GenericIdInterface $workspaceId, WorkspaceProfile $workspaceProfile): Workspace
     {
         return $this->workspaces[] = Workspace::create($workspaceId, $this, $workspaceProfile);
+    }
+
+    public function getCards(): Collection
+    {
+        return $this
+            ->cards
+            ->matching(Criteria::create()
+                ->where(Criteria::expr()?->eq('blockedAt', null))
+                ->andWhere(Criteria::expr()?->eq('revokedAt', null))
+            );
+    }
+
+    public function getCard(GenericIdInterface $cardId): Card
+    {
+        $card = $this
+            ->cards
+            ->matching(Criteria::create()
+                ->where(Criteria::expr()?->eq('id', (string) $cardId))
+                ->andWhere(Criteria::expr()?->eq('blockedAt', null))
+                ->andWhere(Criteria::expr()?->eq('revokedAt', null))
+            );
+        return $card instanceof Card
+            ? $card
+            : throw new NotFoundException("Card $cardId not found");
     }
 
     /**

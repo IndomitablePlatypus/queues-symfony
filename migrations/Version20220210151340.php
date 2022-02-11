@@ -11,12 +11,23 @@ final class Version20220210151340 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return '';
+        return 'Requirements';
     }
 
     public function up(Schema $schema): void
     {
-        $this->addSql('CREATE TABLE "requirements" (id UUID NOT NULL, plan_id UUID NOT NULL, description TEXT NOT NULL, added_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, removed_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, updated_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, PRIMARY KEY(id))');
+        $this->addSql("
+            CREATE TABLE requirements (
+                id uuid NOT NULL, 
+                plan_id uuid NOT NULL, 
+                description TEXT NOT NULL, 
+                added_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, 
+                removed_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, 
+                created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, 
+                updated_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
         $this->addSql('CREATE INDEX requirements_plan_id_idx ON "requirements" (plan_id)');
         $this->addSql('CREATE INDEX requirements_added_at_idx ON "requirements" (added_at)');
         $this->addSql('CREATE INDEX requirements_launched_at_idx ON "requirements" (removed_at)');

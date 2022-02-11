@@ -4,6 +4,7 @@ namespace App\Infrastructure\EventListeners;
 
 use App\Infrastructure\Exceptions\AuthenticationFailedException;
 use App\Infrastructure\Exceptions\LogicException;
+use App\Infrastructure\Exceptions\NotFoundException;
 use App\Infrastructure\Exceptions\ParameterAssertionException;
 use App\Infrastructure\Exceptions\ValidationException;
 use JsonSerializable;
@@ -31,6 +32,7 @@ class ExceptionListener
             $exception instanceof ParameterAssertionException,
                 $exception instanceof LogicException => $this->getResponse($exception, Response::HTTP_BAD_REQUEST),
             $exception instanceof MethodNotAllowedHttpException => $this->getResponse($exception, Response::HTTP_METHOD_NOT_ALLOWED, 'Invalid method'),
+            $exception instanceof NotFoundException => $this->getResponse($exception, Response::HTTP_NOT_FOUND),
             $exception instanceof NotFoundHttpException => $this->getResponse($exception, Response::HTTP_NOT_FOUND, 'Not found'),
             $exception instanceof RouteNotFoundException => $this->getResponse($exception, Response::HTTP_NOT_FOUND),
             $exception instanceof HttpException => $this->getResponse($exception, $exception->getStatusCode()),

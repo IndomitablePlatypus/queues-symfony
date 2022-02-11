@@ -7,19 +7,30 @@ namespace DoctrineMigrations;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
 
-/**
- * Auto-generated Migration: Please modify to your needs!
- */
 final class Version20220209102140 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return '';
+        return 'Plans';
     }
 
     public function up(Schema $schema): void
     {
-        $this->addSql('CREATE TABLE "plans" (id UUID NOT NULL, workspace_id UUID NOT NULL, profile JSONB NOT NULL, added_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, launched_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, stopped_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, archived_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, expiration_date TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, updated_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, PRIMARY KEY(id))');
+        $this->addSql("
+            CREATE TABLE \"plans\" (
+                id uuid NOT NULL, 
+                workspace_id uuid NOT NULL,
+                profile JSONB NOT NULL,
+                added_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, 
+                launched_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, 
+                stopped_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, 
+                archived_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, 
+                expiration_date TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, 
+                created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, 
+                updated_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
         $this->addSql('CREATE INDEX plans_workspace_id_idx ON "plans" (workspace_id)');
         $this->addSql('CREATE INDEX plans_added_at_idx ON "plans" (added_at)');
         $this->addSql('CREATE INDEX plans_launched_at_idx ON "plans" (launched_at)');

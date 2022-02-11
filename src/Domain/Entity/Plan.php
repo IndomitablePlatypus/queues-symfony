@@ -54,6 +54,9 @@ class Plan
         #[ORM\OneToMany(mappedBy: "plan", targetEntity: "Requirement")]
         private Collection $requirements,
 
+        #[ORM\OneToMany(mappedBy: "plan", targetEntity: "Card")]
+        private Collection $cards,
+
         #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
         private ?DateTime $launchedAt = null,
 
@@ -79,6 +82,7 @@ class Plan
             $profile->toArray(),
             self::now(),
             new ArrayCollection(),
+            new ArrayCollection(),
         );
     }
 
@@ -96,6 +100,11 @@ class Plan
     public function getWorkspaceId(): GenericIdInterface
     {
         return $this->workspace->getId();
+    }
+
+    public function getWorkspace(): Workspace
+    {
+        return $this->workspace;
     }
 
     public function getProfile(): PlanProfile
@@ -129,7 +138,7 @@ class Plan
         return self::carbonOrNull($this->expirationDate);
     }
 
-    public function launch(string $expirationDate): static
+    public function launch(string $expirationDate): self
     {
         if ($this->archivedAt) {
             throw new LogicException('Cannot launch archived plan');
@@ -145,7 +154,7 @@ class Plan
         return $this;
     }
 
-    public function stop(): static
+    public function stop(): self
     {
         if ($this->archivedAt) {
             throw new LogicException('Cannot stop archived plan');
@@ -156,7 +165,7 @@ class Plan
         return $this;
     }
 
-    public function archive(): static
+    public function archive(): self
     {
         $this->archivedAt = self::now();
         return $this;
@@ -185,6 +194,16 @@ class Plan
     public function addRequirement(GenericIdInterface $requirementId, string $description): Requirement
     {
         return $this->requirements[] = Requirement::create($requirementId, $this, $description);
+    }
+
+    public function getCards(): Collection
+    {
+        return $this->cards;
+    }
+
+    public function addCard(GenericIdInterface $cardId, User $customer): Card
+    {
+        return $this->cards[] = Card::create($cardId, $this, $customer);
     }
 
 }

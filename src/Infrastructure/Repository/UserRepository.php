@@ -77,7 +77,12 @@ class UserRepository
         }
     }
 
-    public function getById(GenericIdInterface $id): user
+    public function take(GenericIdInterface $customerId): User
+    {
+        return $this->getById($customerId);
+    }
+
+    public function getById(GenericIdInterface $id): User
     {
         return $this->find($id) ?? throw new NotFoundException("User $id not found");
     }

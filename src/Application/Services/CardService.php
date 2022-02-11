@@ -25,13 +25,53 @@ class CardService
         GenericIdInterface $workspaceId,
         GenericIdInterface $planId,
         GenericIdInterface $cardId,
-        GenericIdInterface $customerId
+        GenericIdInterface $customerId,
     ): Card {
         return $this->cardRepository->persist(
             $keeper
                 ->getWorkspace($workspaceId)
                 ->getPlan($planId)
                 ->addCard($cardId, $this->customerRepository->take($customerId))
+        );
+    }
+
+    public function complete(User $keeper, GenericIdInterface $workspaceId, GenericIdInterface $cardId): Card
+    {
+        return $this->cardRepository->persist(
+            $keeper
+                ->getWorkspace($workspaceId)
+                ->getCard($cardId)
+                ->complete()
+        );
+    }
+
+    public function block(User $keeper, GenericIdInterface $workspaceId, GenericIdInterface $cardId): Card
+    {
+        return $this->cardRepository->persist(
+            $keeper
+                ->getWorkspace($workspaceId)
+                ->getCard($cardId)
+                ->block()
+        );
+    }
+
+    public function unblock(User $keeper, GenericIdInterface $workspaceId, GenericIdInterface $cardId): Card
+    {
+        return $this->cardRepository->persist(
+            $keeper
+                ->getWorkspace($workspaceId)
+                ->getCard($cardId)
+                ->unblock()
+        );
+    }
+
+    public function revoke(User $keeper, GenericIdInterface $workspaceId, GenericIdInterface $cardId): Card
+    {
+        return $this->cardRepository->persist(
+            $keeper
+                ->getWorkspace($workspaceId)
+                ->getCard($cardId)
+                ->revoke()
         );
     }
 }

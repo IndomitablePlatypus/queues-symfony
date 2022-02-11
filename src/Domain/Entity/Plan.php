@@ -201,6 +201,15 @@ class Plan
         return $this->cards;
     }
 
+    public function getCard(GenericIdInterface $cardId): ?Card
+    {
+        $card = $this->cards->matching(
+            Criteria::create()
+                ->where(Criteria::expr()?->eq('id', (string) $cardId))
+        )->first();
+        return $card ?: null;
+    }
+
     public function addCard(GenericIdInterface $cardId, User $customer): Card
     {
         return $this->cards[] = Card::create($cardId, $this, $customer);

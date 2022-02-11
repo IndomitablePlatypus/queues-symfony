@@ -108,4 +108,16 @@ class Workspace
     {
         return $this->plans[] = Plan::create($planId, $this, $planProfile);
     }
+
+    public function getCard(GenericIdInterface $cardId): Card
+    {
+        /** @var Plan $plan */
+        foreach ($this->getPlans() as $plan) {
+            $card = $plan->getCard($cardId);
+            if ($card !== null) {
+                return $card;
+            }
+        }
+        throw new NotFoundException("Card $card not found");
+    }
 }

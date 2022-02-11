@@ -84,7 +84,7 @@ class UserRepository
 
     public function getById(GenericIdInterface $id): User
     {
-        return $this->find($id) ?? throw new NotFoundException("User $id not found");
+        return $this->find((string) $id) ?? throw new NotFoundException("User $id not found");
     }
 
     // /**

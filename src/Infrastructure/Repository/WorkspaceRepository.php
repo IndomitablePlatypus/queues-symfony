@@ -2,7 +2,9 @@
 
 namespace App\Infrastructure\Repository;
 
+use App\Application\Contracts\GenericIdInterface;
 use App\Domain\Contracts\WorkspaceRepositoryInterface;
+use App\Domain\Entity\Card;
 use App\Domain\Entity\Workspace;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;

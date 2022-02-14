@@ -45,6 +45,9 @@ class Workspace
 
         #[ORM\OneToMany(mappedBy: "workspace", targetEntity: "Plan")]
         private Collection $plans,
+
+        #[ORM\OneToMany(mappedBy: "collaborator", targetEntity: "Relation")]
+        private Collection $relations,
     ) {
     }
 
@@ -58,6 +61,7 @@ class Workspace
             $keeper,
             $profile->toArray(),
             self::now(),
+            new ArrayCollection(),
             new ArrayCollection(),
         ));
     }

@@ -16,6 +16,7 @@ use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use App\Domain\Entity\Relation;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`users`')]
@@ -45,6 +46,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToMany(mappedBy: "customer", targetEntity: "Card")]
     private Collection $cards;
+
+    #[ORM\OneToMany(mappedBy: "collaborator", targetEntity: "Relation")]
+    private Collection $relations;
 
     public function getId(): GenericIdInterface
     {

@@ -74,4 +74,34 @@ class CardService
                 ->revoke()
         );
     }
+
+    public function noteAchievement(
+        User $keeper,
+        GenericIdInterface $workspaceId,
+        GenericIdInterface $cardId,
+        GenericIdInterface $achievementId,
+        string $description,
+    ): Card {
+        return $this->cardRepository->persist(
+            $keeper
+                ->getWorkspace($workspaceId)
+                ->getCard($cardId)
+                ->noteAchievement($achievementId, $description)
+        );
+    }
+
+    public function dismissAchievement(
+        User $keeper,
+        GenericIdInterface $workspaceId,
+        GenericIdInterface $cardId,
+        GenericIdInterface $achievementId,
+    ): Card {
+        return $this->cardRepository->persist(
+            $keeper
+                ->getWorkspace($workspaceId)
+                ->getCard($cardId)
+                ->dismissAchievement($achievementId)
+        );
+    }
+
 }

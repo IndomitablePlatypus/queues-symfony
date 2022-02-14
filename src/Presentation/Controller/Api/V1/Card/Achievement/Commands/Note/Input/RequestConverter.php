@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Presentation\Controller\Api\V1\Plan\Commands\Requirement\Remove\Input;
+namespace App\Presentation\Controller\Api\V1\Card\Achievement\Commands\Note\Input;
 
 use App\Presentation\BaseRequestConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -12,8 +12,9 @@ class RequestConverter extends BaseRequestConverter
     {
         $request = new Request(
             $httpRequest->attributes->get('workspaceId'),
-            $httpRequest->attributes->get('planId'),
-            $httpRequest->attributes->get('requirementId'),
+            $httpRequest->attributes->get('cardId'),
+            $httpRequest->request->get('achievementId'),
+            $httpRequest->request->get('description'),
         );
         $this->validateAndApply($request, $httpRequest, $configuration);
         return true;

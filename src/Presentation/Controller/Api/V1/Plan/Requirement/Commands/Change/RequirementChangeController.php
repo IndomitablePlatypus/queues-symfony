@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Presentation\Controller\Api\V1\Plan\Commands\Requirement\Change;
+namespace App\Presentation\Controller\Api\V1\Plan\Requirement\Commands\Change;
 
 use App\Application\Services\PlanService;
 use App\Config\Routing\RouteName;
 use App\Presentation\Controller\Api\V1\ApiController;
-use App\Presentation\Controller\Api\V1\Plan\Commands\Requirement\Change\Input\Request;
 use App\Presentation\Controller\Api\V1\Plan\Output\BusinessPlan;
+use App\Presentation\Controller\Api\V1\Plan\Requirement\Commands\Change\Input\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\ConstraintViolationListInterface;

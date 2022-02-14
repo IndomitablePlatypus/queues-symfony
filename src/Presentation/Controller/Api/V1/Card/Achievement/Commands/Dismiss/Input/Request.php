@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Presentation\Controller\Api\V1\Plan\Commands\Requirement\Change\Input;
+namespace App\Presentation\Controller\Api\V1\Card\Achievement\Commands\Dismiss\Input;
 
 use App\Application\Contracts\GenericIdInterface;
 use App\Infrastructure\Support\GuidBasedImmutableId;
@@ -15,15 +15,11 @@ class Request
 
         #[Assert\Type('string')]
         #[Assert\NotBlank]
-        private ?string $planId,
+        private ?string $cardId,
 
         #[Assert\Type('string')]
         #[Assert\NotBlank]
-        private ?string $requirementId,
-
-        #[Assert\Type('string')]
-        #[Assert\NotBlank]
-        private ?string $description,
+        private ?string $achievementId,
     ) {
     }
 
@@ -32,19 +28,13 @@ class Request
         return GuidBasedImmutableId::of($this->workspaceId);
     }
 
-    public function getPlanId(): GenericIdInterface
+    public function getCardId(): GenericIdInterface
     {
-        return GuidBasedImmutableId::of($this->planId);
+        return GuidBasedImmutableId::of($this->cardId);
     }
 
-    public function getRequirementId(): GenericIdInterface
+    public function getAchievementId(): GenericIdInterface
     {
-        return GuidBasedImmutableId::of($this->requirementId);
+        return GuidBasedImmutableId::of($this->achievementId);
     }
-
-    public function getDescription(): string
-    {
-        return $this->description;
-    }
-
 }

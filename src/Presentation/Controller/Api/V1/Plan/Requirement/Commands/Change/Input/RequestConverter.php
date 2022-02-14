@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Presentation\Controller\Api\V1\Plan\Commands\Requirement\Change\Input;
+namespace App\Presentation\Controller\Api\V1\Plan\Requirement\Commands\Change\Input;
 
 use App\Presentation\BaseRequestConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Presentation\Controller\Api\V1\Plan\Commands\Requirement\Remove\Input;
+namespace App\Presentation\Controller\Api\V1\Plan\Requirement\Commands\Remove\Input;
 
 use App\Application\Contracts\GenericIdInterface;
 use App\Infrastructure\Support\GuidBasedImmutableId;

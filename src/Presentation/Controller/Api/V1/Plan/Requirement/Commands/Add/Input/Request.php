@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Presentation\Controller\Api\V1\Plan\Commands\Requirement\Add\Input;
+namespace App\Presentation\Controller\Api\V1\Plan\Requirement\Commands\Add\Input;
 
 use App\Application\Contracts\GenericIdInterface;
 use App\Infrastructure\Support\GuidBasedImmutableId;

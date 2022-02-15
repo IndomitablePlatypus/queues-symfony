@@ -5,6 +5,7 @@ namespace App\Infrastructure\Repository;
 use App\Application\Contracts\GenericIdInterface;
 use App\Domain\Contracts\InviteRepositoryInterface;
 use App\Domain\Entity\Invite;
+use App\Infrastructure\Exceptions\NotFoundException;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -29,5 +30,12 @@ class InviteRepository extends ServiceEntityRepository implements InviteReposito
             WHERE i.id = :inviteId
         ")->setParameter('inviteId', $inviteId);
         $query->execute();
+    }
+
+    public function take(GenericIdInterface $inviteId): Invite
+    {
+        /** @var Invite $invite */
+        $invite = $this->find((string) $inviteId);
+        return $invite ?? throw new NotFoundException("Invite $inviteId not found");
     }
 }

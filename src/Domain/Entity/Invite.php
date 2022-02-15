@@ -15,10 +15,9 @@ use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 
 #[ORM\Entity(repositoryClass: InviteRepository::class)]
-#[ORM\Table(name: '`relations`')]
-#[ORM\Index(fields: ["collaboratorId"])]
+#[ORM\Table(name: '`invites`')]
 #[ORM\Index(fields: ["workspaceId"])]
-#[ORM\Index(fields: ["establishedAt"])]
+#[ORM\Index(fields: ["proposedAt"])]
 #[ORM\HasLifecycleCallbacks]
 class Invite
 {

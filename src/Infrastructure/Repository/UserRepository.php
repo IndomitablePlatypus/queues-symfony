@@ -3,6 +3,7 @@
 namespace App\Infrastructure\Repository;
 
 use App\Application\Contracts\GenericIdInterface;
+use App\Domain\Contracts\CollaboratorRepositoryInterface;
 use App\Domain\Contracts\CustomerRepositoryInterface;
 use App\Domain\Entity\User;
 use App\Infrastructure\Exceptions\AuthenticationFailedException;
@@ -27,7 +28,8 @@ class UserRepository
     ServiceEntityRepository
     implements
     PasswordUpgraderInterface,
-    CustomerRepositoryInterface
+    CustomerRepositoryInterface,
+    CollaboratorRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
@@ -80,6 +82,11 @@ class UserRepository
     public function take(GenericIdInterface $customerId): User
     {
         return $this->getById($customerId);
+    }
+
+    public function getCollaborator(GenericIdInterface $collaboratorId): User
+    {
+        return $this->getById($collaboratorId);
     }
 
     public function getById(GenericIdInterface $id): User

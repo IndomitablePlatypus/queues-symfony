@@ -32,7 +32,7 @@ class Relation
 
         #[ORM\ManyToOne(targetEntity: "User", inversedBy: "relations")]
         #[ORM\JoinColumn(name: "collaborator_id", referencedColumnName: "id")]
-        private User $user,
+        private User $collaborator,
 
         #[ORM\ManyToOne(targetEntity: "Workspace", inversedBy: "relations")]
         #[ORM\JoinColumn(name: "workspace_id", referencedColumnName: "id")]
@@ -74,7 +74,7 @@ class Relation
 
     public function getCollaborator(): User
     {
-        return $this->user;
+        return $this->collaborator;
     }
 
     public function getWorkspace(): Workspace

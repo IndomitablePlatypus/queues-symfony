@@ -3,6 +3,7 @@
 namespace App\Presentation\Controller\Api\V1\Card\Queries;
 
 use App\Config\Routing\RouteName;
+use App\Domain\Contracts\CollaboratingWorkspaceRepositoryInterface;
 use App\Infrastructure\Support\GuidBasedImmutableId;
 use App\Presentation\Controller\Api\V1\ApiController;
 use App\Presentation\Controller\Api\V1\Card\Output\BusinessCard;
@@ -14,12 +15,14 @@ use Symfony\Component\Routing\Annotation\Route;
 class CardGetOneController extends ApiController
 {
     #[Route('', name: RouteName::GET_CARD, methods: ['GET'])]
-    public function add(Request $request): JsonResponse
+    public function add(Request $request, CollaboratingWorkspaceRepositoryInterface $collaboratingWorkspaceRepository): JsonResponse
     {
         return $this->respond(BusinessCard::of(
-            $this
-                ->getUser()
-                ->getWorkspace(GuidBasedImmutableId::of($request->attributes->get('workspaceId')))
+            $collaboratingWorkspaceRepository
+                ->getCollaboratingWorkspace(
+                    $this->getUser()->getId(),
+                    GuidBasedImmutableId::of($request->attributes->get('workspaceId')),
+                )
                 ->getCard(GuidBasedImmutableId::of($request->attributes->get('cardId')))
         ));
     }

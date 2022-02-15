@@ -47,7 +47,7 @@ class Workspace
         #[ORM\OneToMany(mappedBy: "workspace", targetEntity: "Plan")]
         private Collection $plans,
 
-        #[ORM\OneToMany(mappedBy: "collaborator", targetEntity: "Relation")]
+        #[ORM\OneToMany(mappedBy: "workspace", targetEntity: "Relation")]
         private Collection $relations,
     ) {
     }
@@ -136,6 +136,11 @@ class Workspace
         );
         $this->relations[] = $relation;
         return $relation;
+    }
+
+    public function getRelations(): Collection
+    {
+        return $this->relations;
     }
 
     public function invite(): Invite

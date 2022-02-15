@@ -41,12 +41,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string')]
     private string $password;
 
-    #[ORM\ManyToMany(targetEntity: "Workspace")]
-    #[ORM\JoinTable(
-        name: "Relation",
-        joinColumns: [new ORM\JoinColumn(name: "collaborator_id", referencedColumnName: "id")],
-        inverseJoinColumns: [new ORM\JoinColumn(name: "workspace_id", referencedColumnName: "id")]
-    )]
+    #[ORM\OneToMany(mappedBy: "keeper", targetEntity: "Workspace")]
     private Collection $workspaces;
 
     #[ORM\OneToMany(mappedBy: "customer", targetEntity: "Card")]

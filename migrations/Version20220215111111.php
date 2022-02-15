@@ -29,9 +29,8 @@ final class Version20220215111111 extends AbstractMigration
         $this->addSql('CREATE INDEX invites_workspace_id_idx ON "invites" (workspace_id)');
         $this->addSql('CREATE INDEX invites_proposed_at_idx ON "invites" (proposed_at)');
         $this->addSql('COMMENT ON COLUMN "invites".id IS \'(DC2Type:uuid)\'');
-        $this->addSql('COMMENT ON COLUMN "invites".collaborator_id IS \'(DC2Type:uuid)\'');
         $this->addSql('COMMENT ON COLUMN "invites".workspace_id IS \'(DC2Type:uuid)\'');
-        $this->addSql('ALTER TABLE "invites" ADD CONSTRAINT fk_invites_workspaces_collaborator_id FOREIGN KEY (workspace_id) REFERENCES "workspaces" (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
+        $this->addSql('ALTER TABLE "invites" ADD CONSTRAINT fk_invites_workspaces_workspace_id FOREIGN KEY (workspace_id) REFERENCES "workspaces" (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
     }
 
     public function down(Schema $schema): void

@@ -10,4 +10,6 @@ interface InviteRepositoryInterface
     public function persist(Invite $invite): Invite;
 
     public function delete(GenericIdInterface $inviteId): void;
+
+    public function take(GenericIdInterface $inviteId): Invite;
 }

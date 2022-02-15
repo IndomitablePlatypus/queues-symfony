@@ -4,8 +4,8 @@ namespace App\Infrastructure\Repository;
 
 use App\Application\Contracts\GenericIdInterface;
 use App\Domain\Contracts\WorkspaceRepositoryInterface;
-use App\Domain\Entity\Card;
 use App\Domain\Entity\Workspace;
+use App\Infrastructure\Exceptions\NotFoundException;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -21,5 +21,12 @@ class WorkspaceRepository extends ServiceEntityRepository implements WorkspaceRe
         $this->_em->persist($workspace);
         $this->_em->flush();
         return $workspace;
+    }
+
+    public function take(GenericIdInterface $workspaceId): Workspace
+    {
+        /** @var Workspace $workspace */
+        $workspace = $this->find((string) $workspaceId);
+        return $workspace ?? throw new NotFoundException("Workspace $workspaceId not found");
     }
 }

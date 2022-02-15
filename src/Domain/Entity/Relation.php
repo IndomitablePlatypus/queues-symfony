@@ -30,11 +30,13 @@ class Relation
         #[ORM\Column(type: 'uuid')]
         private UuidInterface $id,
 
-        #[ORM\Column(type: 'uuid')]
-        private UuidInterface $collaboratorId,
+        #[ORM\ManyToOne(targetEntity: "User", inversedBy: "relations")]
+        #[ORM\JoinColumn(name: "collaborator_id", referencedColumnName: "id")]
+        private User $user,
 
-        #[ORM\Column(type: 'uuid')]
-        private UuidInterface $workspaceId,
+        #[ORM\ManyToOne(targetEntity: "Workspace", inversedBy: "relations")]
+        #[ORM\JoinColumn(name: "workspace_id", referencedColumnName: "id")]
+        private Workspace $workspace,
 
         #[ORM\Column(type: Types::STRING)]
         private string $relationType,
@@ -46,14 +48,14 @@ class Relation
 
     public static function create(
         GenericIdInterface $relationId,
-        GenericIdInterface $collaboratorId,
-        GenericIdInterface $workspaceId,
+        User $collaborator,
+        Workspace $workspace,
         RelationType $relationType,
     ): static {
         return new self(
             Uuid::fromString((string) $relationId),
-            Uuid::fromString((string) $collaboratorId),
-            Uuid::fromString((string) $workspaceId),
+            $collaborator,
+            $workspace,
             (string) $relationType,
             self::now(),
         );
@@ -70,13 +72,13 @@ class Relation
         return $this;
     }
 
-    public function getCollaboratorId(): GenericIdInterface
+    public function getCollaborator(): User
     {
-        return GuidBasedImmutableId::of($this->collaboratorId);
+        return $this->user;
     }
 
-    public function getWorkspaceId(): GenericIdInterface
+    public function getWorkspace(): Workspace
     {
-        return GuidBasedImmutableId::of($this->workspaceId);
+        return $this->workspace;
     }
 }

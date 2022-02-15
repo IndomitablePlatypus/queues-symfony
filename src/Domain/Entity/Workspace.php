@@ -4,6 +4,7 @@ namespace App\Domain\Entity;
 
 use App\Application\Contracts\GenericIdInterface;
 use App\Domain\Dto\PlanProfile;
+use App\Domain\Dto\RelationType;
 use App\Domain\Dto\WorkspaceProfile;
 use App\Infrastructure\Exceptions\NotFoundException;
 use App\Infrastructure\Repository\WorkspaceRepository;
@@ -123,5 +124,17 @@ class Workspace
             }
         }
         throw new NotFoundException("Card $card not found");
+    }
+
+    public function relateTo(User $collaborator, RelationType $relationType): Relation
+    {
+        $relation = Relation::create(
+            GuidBasedImmutableId::make(),
+            $collaborator,
+            $this,
+            $relationType,
+        );
+        $this->relations[] = $relation;
+        return $relation;
     }
 }

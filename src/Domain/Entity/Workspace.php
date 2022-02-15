@@ -137,4 +137,12 @@ class Workspace
         $this->relations[] = $relation;
         return $relation;
     }
+
+    public function invite(): Invite
+    {
+        return Invite::create(
+            GuidBasedImmutableId::make(),
+            $this->getId(),
+        );
+    }
 }

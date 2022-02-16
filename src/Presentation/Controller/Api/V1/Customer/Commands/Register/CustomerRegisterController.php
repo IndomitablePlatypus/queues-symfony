@@ -17,7 +17,7 @@ class CustomerRegisterController extends ApiController
     public function register(
         Request $request,
         CustomerService $customerService,
-        ConstraintViolationListInterface $validationErrors
+        ConstraintViolationListInterface $validationErrors,
     ): JsonResponse {
         $this->validate($validationErrors);
 

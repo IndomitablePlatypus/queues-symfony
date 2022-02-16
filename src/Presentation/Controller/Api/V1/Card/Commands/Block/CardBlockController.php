@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class CardBlockController extends ApiController
 {
     #[Route('/block', name: RouteName::BLOCK_CARD, methods: ['PUT'])]
-    public function add(
+    public function block(
         Request $request,
         CardService $cardService,
     ): JsonResponse {

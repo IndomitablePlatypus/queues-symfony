@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class CardUnblockController extends ApiController
 {
     #[Route('/unblock', name: RouteName::UNBLOCK_CARD, methods: ['PUT'])]
-    public function add(
+    public function unblock(
         Request $request,
         CardService $cardService,
     ): JsonResponse {

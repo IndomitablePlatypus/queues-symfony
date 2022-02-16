@@ -15,8 +15,10 @@ use Symfony\Component\Routing\Annotation\Route;
 class CardGetOneController extends ApiController
 {
     #[Route('', name: RouteName::GET_CARD, methods: ['GET'])]
-    public function add(Request $request, CollaboratingWorkspaceRepositoryInterface $collaboratingWorkspaceRepository): JsonResponse
-    {
+    public function getCard(
+        Request $request,
+        CollaboratingWorkspaceRepositoryInterface $collaboratingWorkspaceRepository,
+    ): JsonResponse {
         return $this->respond(BusinessCard::of(
             $collaboratingWorkspaceRepository
                 ->getCollaboratingWorkspace(

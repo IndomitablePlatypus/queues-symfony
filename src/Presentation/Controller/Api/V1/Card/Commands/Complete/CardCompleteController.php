@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class CardCompleteController extends ApiController
 {
     #[Route('/complete', name: RouteName::COMPLETE_CARD, methods: ['PUT'])]
-    public function add(
+    public function complete(
         Request $request,
         CardService $cardService,
     ): JsonResponse {

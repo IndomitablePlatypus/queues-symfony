@@ -15,10 +15,10 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
 class RequirementChangeController extends ApiController
 {
     #[Route('', name: RouteName::CHANGE_PLAN_REQUIREMENT, methods: ['PUT'])]
-    public function add(
+    public function change(
         Request $request,
         PlanService $planService,
-        ConstraintViolationListInterface $validationErrors
+        ConstraintViolationListInterface $validationErrors,
     ): JsonResponse {
         $this->validate($validationErrors);
 

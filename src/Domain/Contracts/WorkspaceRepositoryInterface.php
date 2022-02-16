@@ -10,4 +10,6 @@ interface WorkspaceRepositoryInterface
     public function persist(Workspace $workspace): Workspace;
 
     public function take(GenericIdInterface $workspaceId): Workspace;
+
+    public function takeAll(): array;
 }

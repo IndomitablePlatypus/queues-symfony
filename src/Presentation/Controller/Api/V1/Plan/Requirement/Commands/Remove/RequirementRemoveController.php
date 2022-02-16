@@ -15,10 +15,10 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
 class RequirementRemoveController extends ApiController
 {
     #[Route('', name: RouteName::REMOVE_PLAN_REQUIREMENT, methods: ['DELETE'])]
-    public function add(
+    public function remove(
         Request $request,
         PlanService $planService,
-        ConstraintViolationListInterface $validationErrors
+        ConstraintViolationListInterface $validationErrors,
     ): JsonResponse {
         $this->validate($validationErrors);
 

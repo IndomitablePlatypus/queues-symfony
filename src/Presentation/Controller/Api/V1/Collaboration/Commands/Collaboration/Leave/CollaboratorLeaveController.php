@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Presentation\Controller\Api\V1\Collaboration\Commands\Invite\Propose;
+namespace App\Presentation\Controller\Api\V1\Collaboration\Commands\Collaboration\Leave;
 
 use App\Application\Services\CollaborationService;
 use App\Config\Routing\RouteName;
@@ -10,19 +10,19 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/api/v1/workspace/{workspaceId}/collaboration/invite')]
-class InviteProposeController extends ApiController
+#[Route('/api/v1/workspace/{workspaceId}/collaboration')]
+class CollaboratorLeaveController extends ApiController
 {
-    #[Route('', name: RouteName::PROPOSE_INVITE, methods: ['POST'])]
-    public function propose(
+    #[Route('/leave', name: RouteName::LEAVE_RELATION, methods: ['POST'])]
+    public function leave(
         Request $request,
         CollaborationService $collaborationService,
     ): JsonResponse {
         return $this->respond(
-            (string) $collaborationService->proposeInvite(
+            (string) $collaborationService->leave(
                 $this->getUser(),
                 GuidBasedImmutableId::of($request->attributes->get('workspaceId')),
-            )->getId()
+            )
         );
     }
 }

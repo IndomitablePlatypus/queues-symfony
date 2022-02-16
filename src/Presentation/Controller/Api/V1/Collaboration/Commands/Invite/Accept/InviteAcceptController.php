@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class InviteAcceptController extends ApiController
 {
     #[Route('/{inviteId}/accept', name: RouteName::ACCEPT_INVITE, methods: ['PUT'])]
-    public function add(
+    public function accept(
         Request $request,
         CollaborationService $collaborationService,
     ): JsonResponse {

@@ -27,8 +27,8 @@ class RelationRepository extends ServiceEntityRepository implements RelationRepo
     {
         $query = $this->_em->createQuery("
             DELETE App\Domain\Entity\Relation r 
-            WHERE r.collaborator.id = :collaboratorId
-            AND r.workspace.id = :workspaceId
+            WHERE r.collaborator = :collaboratorId
+            AND r.workspace = :workspaceId
             AND r.relationType = :relationType
         ")
             ->setParameter('collaboratorId', $collaboratorId)

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Presentation\Controller\Api\V1\Collaboration\Commands\Invite\Propose;
+namespace App\Presentation\Controller\Api\V1\Collaboration\Commands\Collaboration\Fire;
 
 use App\Application\Services\CollaborationService;
 use App\Config\Routing\RouteName;
@@ -10,19 +10,20 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/api/v1/workspace/{workspaceId}/collaboration/invite')]
-class InviteProposeController extends ApiController
+#[Route('/api/v1/workspace/{workspaceId}/collaboration')]
+class CollaboratorFireController extends ApiController
 {
-    #[Route('', name: RouteName::PROPOSE_INVITE, methods: ['POST'])]
-    public function propose(
+    #[Route('/fire/{collaboratorId}', name: RouteName::FIRE_COLLABORATOR, methods: ['POST'])]
+    public function fire(
         Request $request,
         CollaborationService $collaborationService,
     ): JsonResponse {
         return $this->respond(
-            (string) $collaborationService->proposeInvite(
+            (string) $collaborationService->fire(
                 $this->getUser(),
                 GuidBasedImmutableId::of($request->attributes->get('workspaceId')),
-            )->getId()
+                GuidBasedImmutableId::of($request->attributes->get('collaboratorId')),
+            )
         );
     }
 }

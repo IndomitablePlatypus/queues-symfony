@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class CardRevokeController extends ApiController
 {
     #[Route('/revoke', name: RouteName::REVOKE_CARD, methods: ['PUT'])]
-    public function add(
+    public function revoke(
         Request $request,
         CardService $cardService,
     ): JsonResponse {

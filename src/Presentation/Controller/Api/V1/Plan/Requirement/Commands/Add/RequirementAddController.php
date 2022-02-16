@@ -18,7 +18,7 @@ class RequirementAddController extends ApiController
     public function add(
         Request $request,
         PlanService $planService,
-        ConstraintViolationListInterface $validationErrors
+        ConstraintViolationListInterface $validationErrors,
     ): JsonResponse {
         $this->validate($validationErrors);
 

@@ -15,10 +15,10 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
 class WorkspaceChangeProfileController extends ApiController
 {
     #[Route('/{workspaceId}/profile', name: RouteName::CHANGE_PROFILE, methods: ['PUT'])]
-    public function add(
+    public function changeProfile(
         Request $request,
         WorkspaceService $workspaceService,
-        ConstraintViolationListInterface $validationErrors
+        ConstraintViolationListInterface $validationErrors,
     ): JsonResponse {
         $this->validate($validationErrors);
 

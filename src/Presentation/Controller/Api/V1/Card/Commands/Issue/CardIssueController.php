@@ -15,10 +15,10 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
 class CardIssueController extends ApiController
 {
     #[Route('', name: RouteName::ISSUE_CARD, methods: ['POST'])]
-    public function add(
+    public function issue(
         Request $request,
         CardService $cardService,
-        ConstraintViolationListInterface $validationErrors
+        ConstraintViolationListInterface $validationErrors,
     ): JsonResponse {
         $this->validate($validationErrors);
 

@@ -9,6 +9,7 @@ use App\Domain\Entity\Relation;
 use App\Domain\Entity\Workspace;
 use App\Infrastructure\Exceptions\NotFoundException;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Persistence\ManagerRegistry;
 
 class WorkspaceRepository
@@ -35,6 +36,11 @@ class WorkspaceRepository
         /** @var Workspace $workspace */
         $workspace = $this->find((string) $workspaceId);
         return $workspace ?? throw new NotFoundException("Workspace $workspaceId not found");
+    }
+
+    public function takeAll(): array
+    {
+        return $this->findAll();
     }
 
     public function getCollaboratingWorkspace(GenericIdInterface $collaboratorId, GenericIdInterface $workspaceId): Workspace

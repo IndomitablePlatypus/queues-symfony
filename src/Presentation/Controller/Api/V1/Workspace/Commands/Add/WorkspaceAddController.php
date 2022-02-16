@@ -18,7 +18,7 @@ class WorkspaceAddController extends ApiController
     public function add(
         Request $request,
         WorkspaceService $workspaceService,
-        ConstraintViolationListInterface $validationErrors
+        ConstraintViolationListInterface $validationErrors,
     ): JsonResponse {
         $this->validate($validationErrors);
 

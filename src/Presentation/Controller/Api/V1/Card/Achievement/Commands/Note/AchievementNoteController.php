@@ -15,10 +15,10 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
 class AchievementNoteController extends ApiController
 {
     #[Route('', name: RouteName::NOTE_ACHIEVEMENT, methods: ['POST'])]
-    public function add(
+    public function note(
         Request $request,
         CardService $cardService,
-        ConstraintViolationListInterface $validationErrors
+        ConstraintViolationListInterface $validationErrors,
     ): JsonResponse {
         $this->validate($validationErrors);
 

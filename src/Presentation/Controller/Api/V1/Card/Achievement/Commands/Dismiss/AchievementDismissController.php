@@ -15,10 +15,10 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
 class AchievementDismissController extends ApiController
 {
     #[Route('', name: RouteName::DISMISS_ACHIEVEMENT, methods: ['DELETE'])]
-    public function add(
+    public function dismiss(
         Request $request,
         CardService $cardService,
-        ConstraintViolationListInterface $validationErrors
+        ConstraintViolationListInterface $validationErrors,
     ): JsonResponse {
         $this->validate($validationErrors);
 

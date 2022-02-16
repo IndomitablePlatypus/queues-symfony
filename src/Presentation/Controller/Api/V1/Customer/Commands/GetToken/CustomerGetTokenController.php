@@ -17,7 +17,7 @@ class CustomerGetTokenController extends ApiController
     public function getToken(
         Request $request,
         CustomerService $customerService,
-        ConstraintViolationListInterface $validationErrors
+        ConstraintViolationListInterface $validationErrors,
     ): JsonResponse {
         $this->validate($validationErrors);
 

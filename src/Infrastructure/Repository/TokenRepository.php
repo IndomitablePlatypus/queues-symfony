@@ -6,6 +6,7 @@ use App\Application\Contracts\GenericIdInterface;
 use App\Domain\Contracts\TokenRepositoryInterface;
 use App\Domain\Entity\Token;
 use App\Domain\Entity\User;
+use App\Infrastructure\Exceptions\AuthenticationFailedException;
 use App\Infrastructure\Exceptions\NotFoundException;
 use App\Infrastructure\Exceptions\ParameterAssertionException;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -21,7 +22,8 @@ class TokenRepository extends ServiceEntityRepository implements TokenRepository
     public function getToken(string $plainTextToken): Token
     {
         /** @var Token $token */
-        $token = $this->find($this->getIdFromPlainTextToken($plainTextToken));
+        $token = $this->find($this->getIdFromPlainTextToken($plainTextToken))
+            ?? throw new AuthenticationFailedException("Unknown token");
         if (password_verify($this->getTokenStringFromPlainTextToken($plainTextToken), $token->getToken())) {
             return $token;
         }

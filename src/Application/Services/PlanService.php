@@ -11,6 +11,7 @@ use App\Domain\Dto\PlanProfile;
 use App\Domain\Entity\Plan;
 use App\Domain\Entity\Requirement;
 use App\Domain\Entity\User;
+use Carbon\Carbon;
 
 class PlanService
 {
@@ -42,10 +43,42 @@ class PlanService
         PlanProfile $profile,
     ): Plan {
         return $this->planRepository->persist(
-            $this->collaboratingWorkspaceRepository
-                ->getCollaboratingWorkspace($collaborator->getId(), $workspaceId)
-                ->getPlan($planId)
+            $this->getPlan($collaborator->getId(), $workspaceId, $planId)
                 ->setProfile($profile)
+        );
+    }
+
+    public function launch(
+        User $collaborator,
+        GenericIdInterface $workspaceId,
+        GenericIdInterface $planId,
+        Carbon $expirationDate,
+    ): Plan {
+        return $this->planRepository->persist(
+            $this->getPlan($collaborator->getId(), $workspaceId, $planId)
+                ->launch($expirationDate)
+        );
+    }
+
+    public function stop(
+        User $collaborator,
+        GenericIdInterface $workspaceId,
+        GenericIdInterface $planId,
+    ): Plan {
+        return $this->planRepository->persist(
+            $this->getPlan($collaborator->getId(), $workspaceId, $planId)
+                ->stop()
+        );
+    }
+
+    public function archive(
+        User $collaborator,
+        GenericIdInterface $workspaceId,
+        GenericIdInterface $planId,
+    ): Plan {
+        return $this->planRepository->persist(
+            $this->getPlan($collaborator->getId(), $workspaceId, $planId)
+                ->archive()
         );
     }
 
@@ -57,9 +90,7 @@ class PlanService
         string $description,
     ): Requirement {
         return $this->requirementRepository->persist(
-            $this->collaboratingWorkspaceRepository
-                ->getCollaboratingWorkspace($collaborator->getId(), $workspaceId)
-                ->getPlan($planId)
+            $this->getPlan($collaborator->getId(), $workspaceId, $planId)
                 ->addRequirement($requirementId, $description)
         );
     }
@@ -72,9 +103,7 @@ class PlanService
         string $description,
     ): Requirement {
         return $this->requirementRepository->persist(
-            $this->collaboratingWorkspaceRepository
-                ->getCollaboratingWorkspace($collaborator->getId(), $workspaceId)
-                ->getPlan($planId)
+            $this->getPlan($collaborator->getId(), $workspaceId, $planId)
                 ->getRequirement($requirementId)
                 ->setDescription($description)
         );
@@ -87,12 +116,20 @@ class PlanService
         GenericIdInterface $requirementId,
     ): Requirement {
         return $this->requirementRepository->persist(
-            $this->collaboratingWorkspaceRepository
-                ->getCollaboratingWorkspace($collaborator->getId(), $workspaceId)
-                ->getPlan($planId)
+            $this->getPlan($collaborator->getId(), $workspaceId, $planId)
                 ->getRequirement($requirementId)
                 ->remove()
         );
+    }
+
+    protected function getPlan(
+        GenericIdInterface $collaboratorId,
+        GenericIdInterface $workspaceId,
+        GenericIdInterface $planId,
+    ): Plan {
+        return $this->collaboratingWorkspaceRepository
+            ->getCollaboratingWorkspace($collaboratorId, $workspaceId)
+            ->getPlan($planId);
     }
 
 }

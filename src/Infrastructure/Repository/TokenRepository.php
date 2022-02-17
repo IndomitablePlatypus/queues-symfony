@@ -2,6 +2,7 @@
 
 namespace App\Infrastructure\Repository;
 
+use App\Application\Contracts\GenericIdInterface;
 use App\Domain\Contracts\TokenRepositoryInterface;
 use App\Domain\Entity\Token;
 use App\Domain\Entity\User;
@@ -33,6 +34,39 @@ class TokenRepository extends ServiceEntityRepository implements TokenRepository
         $this->_em->persist($token);
         $this->_em->flush();
         return $token;
+    }
+
+    public function deleteOldTokens(GenericIdInterface $userId, string $tokenName): void
+    {
+        $tokenId = $this->findOneBy([
+            'userId' => $userId,
+            'name' => $tokenName,
+        ], ['createdAt' => 'DESC']) ?->getId();
+
+        if($tokenId === null) {
+            return;
+        }
+
+        $this->_em->createQuery("
+            DELETE App\Domain\Entity\Token t
+            WHERE t.userId = :userId
+            AND t.name = :tokenName
+            AND NOT t.id = :id
+        ")->execute([
+            'userId' => $userId,
+            'tokenName' => $tokenName,
+            'id' => $tokenId,
+        ]);
+    }
+
+    public function deleteAllTokens(GenericIdInterface $userId): void
+    {
+        $this->_em->createQuery("
+            DELETE App\Domain\Entity\Token t
+            WHERE t.userId = :id
+        ")->execute([
+            'id' => $userId,
+        ]);
     }
 
     protected function getIdFromPlainTextToken(string $plainTextToken): string

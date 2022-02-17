@@ -6,13 +6,16 @@ use App\Domain\Contracts\CustomerRepositoryInterface;
 use App\Domain\Contracts\TokenRepositoryInterface;
 use App\Domain\Entity\Token;
 use App\Domain\Entity\User;
+use App\Domain\Messages\ClearTokens;
 use App\Infrastructure\Support\GuidBasedImmutableId;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 class CustomerService
 {
     public function __construct(
         protected CustomerRepositoryInterface $customerRepository,
         protected TokenRepositoryInterface $tokenRepository,
+        protected MessageBusInterface $messageBus,
     ) {
     }
 
@@ -33,6 +36,10 @@ class CustomerService
     {
         $customer = $this->customerRepository->findByCredentialsOrFail($identity, $password);
 
-        return $this->tokenRepository->newToken($customer, $deviceName);
+        $token = $this->tokenRepository->newToken($customer, $deviceName);
+
+        $this->messageBus->dispatch(ClearTokens::of($customer->getId(), $deviceName));
+
+        return $token;
     }
 }

@@ -47,7 +47,7 @@ class Token
             ->setName($name);
     }
 
-    public function getId(): string
+    public function getId(): int
     {
         return $this->id;
     }

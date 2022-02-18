@@ -157,6 +157,9 @@
             "config/packages/stof_doctrine_extensions.yaml"
         ]
     },
+    "symfony/amqp-messenger": {
+        "version": "v6.0.3"
+    },
     "symfony/cache": {
         "version": "v6.0.2"
     },

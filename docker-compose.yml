@@ -24,6 +24,8 @@ services:
             MERCURE_URL: ${CADDY_MERCURE_URL:-http://caddy/.well-known/mercure}
             MERCURE_PUBLIC_URL: https://${SERVER_NAME:-localhost}/.well-known/mercure
             MERCURE_JWT_SECRET: ${CADDY_MERCURE_JWT_SECRET:-!ChangeMe!}
+        depends_on:
+            - rabbitmq
 
     caddy:
         build:
@@ -60,8 +62,8 @@ services:
             RABBITMQ_DEFAULT_USER: '${RABBITMQ_USER}'
             RABBITMQ_DEFAULT_PASS: '${RABBITMQ_PASSWORD}'
         ports:
-            - '${FORWARD_RABBIT_PORT:-5672}:5672'
-            - '${FORWARD_RABBIT_MAN_PORT:-15672}:15672'
+            - '${FORWARD_RABBIT_PORT:-6672}:5672'
+            - '${FORWARD_RABBIT_MAN_PORT:-6673}:15672'
 
     # Mercure is installed as a Caddy module, prevent the Flex recipe from installing another service
     ###> symfony/mercure-bundle ###

@@ -12,6 +12,7 @@ use App\Infrastructure\Exceptions\UserExistsException;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -69,12 +70,12 @@ class UserRepository
                 ->andWhere('u.username = :identity')
                 ->setParameter('identity', $identity)
                 ->getQuery()
-                ->getOneOrNullResult();
+                ->getSingleResult();
             if (password_verify($password, $user->getPassword())) {
                 return $user;
             }
             throw new AuthenticationFailedException('Unknown credentials');
-        } catch (NonUniqueResultException) {
+        } catch (NonUniqueResultException | NoResultException) {
             throw new AuthenticationFailedException('Unknown credentials');
         }
     }

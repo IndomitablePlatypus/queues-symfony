@@ -2,7 +2,7 @@
 
 namespace App\Domain\Messages;
 
-interface AsycMessageInterface
+interface AsyncMessageInterface
 {
 
 }

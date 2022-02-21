@@ -7,7 +7,7 @@ use App\Domain\Dto\RelationType;
 use App\Infrastructure\Support\ArrayPresenterTrait;
 use App\Infrastructure\Support\GuidBasedImmutableId;
 
-class EstablishRelation
+class EstablishRelation implements AsyncMessageInterface
 {
     use ArrayPresenterTrait;
 

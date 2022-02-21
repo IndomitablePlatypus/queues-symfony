@@ -135,7 +135,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return [
             'profileId' => (string) $this->id,
             'name' => $this->name,
-            'phone' => $this->username,
+            'identity' => $this->username,
         ];
     }
 

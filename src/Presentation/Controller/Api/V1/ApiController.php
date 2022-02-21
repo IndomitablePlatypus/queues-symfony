@@ -7,7 +7,6 @@ use App\Infrastructure\Exceptions\AuthenticationFailedException;
 use App\Infrastructure\Exceptions\ValidationException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 abstract class ApiController extends AbstractController

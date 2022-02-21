@@ -6,7 +6,7 @@ use App\Application\Contracts\GenericIdInterface;
 use App\Infrastructure\Support\ArrayPresenterTrait;
 use App\Infrastructure\Support\GuidBasedImmutableId;
 
-class ClearTokens
+class ClearTokens implements AsyncMessageInterface
 {
     use ArrayPresenterTrait;
 

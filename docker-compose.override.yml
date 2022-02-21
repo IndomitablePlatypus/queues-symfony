@@ -13,6 +13,13 @@ services:
     environment:
       APP_ENV: dev
 
+  php-job:
+    volumes:
+      - ./:/srv/app:rw,cached
+      - ./docker/php-job/conf.d/symfony.dev.ini:/usr/local/etc/php/conf.d/symfony.ini
+    environment:
+      APP_ENV: dev
+
   caddy:
     volumes:
       - ./docker/caddy/Caddyfile:/etc/caddy/Caddyfile:ro

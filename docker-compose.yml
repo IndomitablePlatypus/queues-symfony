@@ -24,6 +24,34 @@ services:
             MERCURE_URL: ${CADDY_MERCURE_URL:-http://caddy/.well-known/mercure}
             MERCURE_PUBLIC_URL: https://${SERVER_NAME:-localhost}/.well-known/mercure
             MERCURE_JWT_SECRET: ${CADDY_MERCURE_JWT_SECRET:-!ChangeMe!}
+        depends_on:
+            - rabbitmq
+            - database
+
+    php-job:
+        build:
+            context: .
+            target: job_symfony_php
+            args:
+                SYMFONY_VERSION: ${SYMFONY_VERSION:-}
+                SKELETON: ${SKELETON:-symfony/skeleton}
+                STABILITY: ${STABILITY:-stable}
+        restart: unless-stopped
+        volumes:
+            - php_job_socket:/var/run/php
+        healthcheck:
+            interval: 10s
+            timeout: 3s
+            retries: 3
+            start_period: 30s
+        environment:
+            DATABASE_URL: postgresql://${POSTGRES_USER:-symfony}:${POSTGRES_PASSWORD:-ChangeMe}@database:5432/${POSTGRES_DB:-app}?serverVersion=${POSTGRES_VERSION:-13}
+            MERCURE_URL: ${CADDY_MERCURE_URL:-http://caddy/.well-known/mercure}
+            MERCURE_PUBLIC_URL: https://${SERVER_NAME:-localhost}/.well-known/mercure
+            MERCURE_JWT_SECRET: ${CADDY_MERCURE_JWT_SECRET:-!ChangeMe!}
+        depends_on:
+            - rabbitmq
+            - database
 
     caddy:
         build:
@@ -57,11 +85,11 @@ services:
     rabbitmq:
         image: rabbitmq:3-management-alpine
         environment:
-            RABBITMQ_DEFAULT_USER: '${RABBITMQ_USER}'
-            RABBITMQ_DEFAULT_PASS: '${RABBITMQ_PASSWORD}'
+            RABBITMQ_DEFAULT_USER: '${RABBITMQ_USER:-guest}'
+            RABBITMQ_DEFAULT_PASS: '${RABBITMQ_PASSWORD:-guest}'
         ports:
-            - '${FORWARD_RABBIT_PORT:-5672}:5672'
-            - '${FORWARD_RABBIT_MAN_PORT:-15672}:15672'
+            - '${FORWARD_RABBIT_PORT:-5672}:${RABBIT_PORT:-5672}'
+            - '${FORWARD_RABBIT_MAN_PORT:-15672}:${RABBIT_MAN_PORT:-15672}'
 
     # Mercure is installed as a Caddy module, prevent the Flex recipe from installing another service
     ###> symfony/mercure-bundle ###
@@ -83,6 +111,7 @@ services:
 
 volumes:
     php_socket:
+    php_job_socket:
     caddy_data:
     caddy_config:
     ###> symfony/mercure-bundle ###

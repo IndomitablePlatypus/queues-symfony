@@ -164,7 +164,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this
             ->cards
             ->matching(Criteria::create()
-                ->andWhere(Criteria::expr()?->eq('revokedAt', null))
+                ->where(Criteria::expr()?->eq('revokedAt', null))
             );
     }
 

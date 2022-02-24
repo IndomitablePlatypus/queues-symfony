@@ -1,0 +1,21 @@
+nelmio_api_doc:
+    documentation:
+        servers:
+            - url: https://localhost/
+              description: API environment
+        info:
+            title: Cardz Lite, Symfony edition
+            description: Bonus cards server-side application. Lite version. Symfony edition.
+            version: 0.1.1.45
+        components:
+            securitySchemes:
+                Bearer:
+                    type: http
+                    scheme: bearer
+                    bearerFormat: JWT
+                    in: header
+        security:
+            -   Bearer: []
+    areas: # to filter documented areas
+        path_patterns:
+            - ^/api(?!/doc.json$) # Accepts routes under /api except /api/doc

@@ -164,8 +164,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this
             ->cards
             ->matching(Criteria::create()
-                ->where(Criteria::expr()?->eq('blockedAt', null))
-                ->andWhere(Criteria::expr()?->eq('revokedAt', null))
+                ->where(Criteria::expr()?->eq('revokedAt', null))
             );
     }
 
@@ -175,7 +174,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             ->cards
             ->matching(Criteria::create()
                 ->where(Criteria::expr()?->eq('id', (string) $cardId))
-                ->andWhere(Criteria::expr()?->eq('blockedAt', null))
                 ->andWhere(Criteria::expr()?->eq('revokedAt', null))
             );
         return $card instanceof Card

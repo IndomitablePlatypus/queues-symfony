@@ -11,7 +11,10 @@ use App\Domain\Dto\PlanProfile;
 use App\Domain\Entity\Plan;
 use App\Domain\Entity\Requirement;
 use App\Domain\Entity\User;
+use App\Domain\Messages\RequirementChanged;
+use App\Domain\Messages\RequirementsChanged;
 use Carbon\Carbon;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 class PlanService
 {
@@ -20,6 +23,7 @@ class PlanService
         protected CollaboratingWorkspaceRepositoryInterface $collaboratingWorkspaceRepository,
         protected PlanRepositoryInterface $planRepository,
         protected RequirementRepositoryInterface $requirementRepository,
+        protected MessageBusInterface $messageBus,
     ) {
     }
 
@@ -89,10 +93,14 @@ class PlanService
         GenericIdInterface $requirementId,
         string $description,
     ): Requirement {
-        return $this->requirementRepository->persist(
+        $requirement = $this->requirementRepository->persist(
             $this->getPlan($collaborator->getId(), $workspaceId, $planId)
                 ->addRequirement($requirementId, $description)
         );
+
+        $this->messageBus->dispatch(RequirementsChanged::of($planId));
+
+        return $requirement;
     }
 
     public function changeRequirement(
@@ -102,11 +110,15 @@ class PlanService
         GenericIdInterface $requirementId,
         string $description,
     ): Requirement {
-        return $this->requirementRepository->persist(
+        $requirement = $this->requirementRepository->persist(
             $this->getPlan($collaborator->getId(), $workspaceId, $planId)
                 ->getRequirement($requirementId)
                 ->setDescription($description)
         );
+
+        $this->messageBus->dispatch(RequirementChanged::of($planId, $requirementId, $description));
+
+        return $requirement;
     }
 
     public function removeRequirement(
@@ -115,11 +127,15 @@ class PlanService
         GenericIdInterface $planId,
         GenericIdInterface $requirementId,
     ): Requirement {
-        return $this->requirementRepository->persist(
+        $requirement = $this->requirementRepository->persist(
             $this->getPlan($collaborator->getId(), $workspaceId, $planId)
                 ->getRequirement($requirementId)
                 ->remove()
         );
+
+        $this->messageBus->dispatch(RequirementsChanged::of($planId));
+
+        return $requirement;
     }
 
     protected function getPlan(

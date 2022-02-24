@@ -94,6 +94,8 @@ class TokenRepository extends ServiceEntityRepository implements TokenRepository
     {
         try {
             return $this->find($id) ?? throw new AuthenticationFailedException("Unknown token");
+        } catch (AuthenticationFailedException $exception) {
+            throw $exception;
         } catch (Throwable $exception) {
             throw new AuthenticationFailedException(message: "Invalid token format", previous: $exception);
         }

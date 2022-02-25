@@ -129,16 +129,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    #[ArrayShape(['profileId' => "string", 'name' => "string", 'phone' => "string"])]
-    public function profile(): array
-    {
-        return [
-            'profileId' => (string) $this->id,
-            'name' => $this->name,
-            'identity' => $this->username,
-        ];
-    }
-
     public function getWorkspaces(): Collection
     {
         return $this->workspaces;

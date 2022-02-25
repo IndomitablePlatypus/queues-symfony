@@ -11,11 +11,13 @@ use OpenApi\Annotations as OA;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @OA\Tag(name="Customer")
+ */
 #[Route('/api/v1/customer')]
 class CardsGetController extends ApiController
 {
     /**
-     * @OA\Tag(name="Customer")
      * @OA\Response(
      *     response=200,
      *     description="Get cards",

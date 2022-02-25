@@ -3,6 +3,7 @@
 namespace App\Presentation\Controller\Api\V1\Customer\Output;
 
 use App\Domain\Entity\Card;
+use App\Infrastructure\Support\ArrayPresenterTrait;
 use JsonSerializable;
 use OpenApi\Attributes\Items;
 use OpenApi\Attributes\Property;
@@ -26,6 +27,8 @@ use OpenApi\Attributes\Schema;
 )]
 class IssuedCard implements JsonSerializable
 {
+    use ArrayPresenterTrait;
+
     public function __construct(
         #[Property(description: "Card Id", format: "uuid", example: "56afe1ba-5795-482e-9da7-066d0323b8dd", nullable: false)]
         public string $cardId,
@@ -103,18 +106,7 @@ class IssuedCard implements JsonSerializable
 
     public function jsonSerialize(): array
     {
-        return [
-            $this->cardId,
-            $this->workspaceName,
-            $this->workspaceAddress,
-            $this->customerId,
-            $this->description,
-            $this->satisfied,
-            $this->completed,
-            $this->blocked,
-            $this->achievements,
-            $this->requirements,
-        ];
+        return $this->_toArray(publicOnly: true);
     }
 
 }

@@ -10,6 +10,7 @@ use OpenApi\Attributes\Schema;
 
 #[Schema(
     title: "IssuedCard",
+    description: "Issued card",
     required: [
         "cardId",
         "workspaceName",
@@ -54,8 +55,12 @@ class IssuedCard implements JsonSerializable
             description: "Achieved requirements",
             type: "array",
             items: new Items(
-                type: "string",
-                example: "",
+                required: ["achievementId", "description"],
+                properties: [
+                    new Property(property: "achievementId", description: "Achievement Id = corresponding requirement id",  type: "string", nullable: false),
+                    new Property(property: "description", description: "Achievement description = corresponding requirement description",  type: "string", nullable: false),
+                ],
+                type: "object",
             ),
             example: [],
             nullable: false,
@@ -66,8 +71,12 @@ class IssuedCard implements JsonSerializable
             description: "All requirements",
             type: "array",
             items: new Items(
-                type: "string",
-                example: "",
+                required: ["requirementId", "description"],
+                properties: [
+                    new Property(property: "achievementId", description: "Requirement id",  type: "string", nullable: false),
+                    new Property(property: "description", description: "Requirement description",  type: "string", nullable: false),
+                ],
+                type: "object",
             ),
             example: [],
             nullable: false,

@@ -4,11 +4,19 @@ namespace App\Presentation\Controller\Api\V1\Customer\Output;
 
 use App\Domain\Entity\Card;
 use JsonSerializable;
+use OpenApi\Attributes\Items;
+use OpenApi\Attributes\Property;
 
 class IssuedCards implements JsonSerializable
 {
     /** @var Card[] */
-    protected array $cards;
+    #[Property(
+        description: "All of the customer's issued cards",
+        type: "array",
+        items: new Items(ref: "#/components/schemas/IssuedCard"),
+        nullable: false,
+    )]
+    public array $cards;
 
     public function __construct(array $cards)
     {

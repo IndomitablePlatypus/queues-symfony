@@ -30,7 +30,7 @@ class IssuedCard implements JsonSerializable
     use ArrayPresenterTrait;
 
     public function __construct(
-        #[Property(description: "Card Id", format: "uuid", example: "56afe1ba-5795-482e-9da7-066d0323b8dd", nullable: false)]
+        #[Property(description: "Card Id", format: "uuid", nullable: false)]
         public string $cardId,
 
         #[Property(description: "Workspace (business) name", example: "Coffee shop", nullable: false)]
@@ -39,7 +39,7 @@ class IssuedCard implements JsonSerializable
         #[Property(description: "Workspace (business) address", example: "Mapping street 17, Longitude county, Liberland", nullable: false)]
         public string $workspaceAddress,
 
-        #[Property(description: "Customer Id", format: "uuid", example: "00095068-01fa-405c-be2e-64d776279f9e", nullable: false)]
+        #[Property(description: "Customer Id", format: "uuid", nullable: false)]
         public string $customerId,
 
         #[Property(description: "Card (plan) description", example: "Get a free americano for 8 cups of cappuccino", nullable: false)]
@@ -60,12 +60,11 @@ class IssuedCard implements JsonSerializable
             items: new Items(
                 required: ["achievementId", "description"],
                 properties: [
-                    new Property(property: "achievementId", description: "Achievement Id = corresponding requirement id",  type: "string", nullable: false),
-                    new Property(property: "description", description: "Achievement description = corresponding requirement description",  type: "string", nullable: false),
+                    new Property(property: "achievementId", description: "Achievement Id = corresponding requirement id", type: "string", format: "uuid", nullable: false),
+                    new Property(property: "description", description: "Requirement description", type: "string", example: "Buy a cup of lungo", nullable: false),
                 ],
                 type: "object",
             ),
-            example: [],
             nullable: false,
         )]
         public array $achievements,
@@ -76,12 +75,11 @@ class IssuedCard implements JsonSerializable
             items: new Items(
                 required: ["requirementId", "description"],
                 properties: [
-                    new Property(property: "achievementId", description: "Requirement id",  type: "string", nullable: false),
-                    new Property(property: "description", description: "Requirement description",  type: "string", nullable: false),
+                    new Property(property: "requirementId", description: "Requirement id", type: "string", format: "uuid", nullable: false),
+                    new Property(property: "description", description: "Requirement description", type: "string", example: "Buy a cup of lungo", nullable: false),
                 ],
                 type: "object",
             ),
-            example: [],
             nullable: false,
         )]
         public array $requirements,

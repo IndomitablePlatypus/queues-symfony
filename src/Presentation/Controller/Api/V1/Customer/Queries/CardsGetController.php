@@ -20,7 +20,7 @@ class CardsGetController extends ApiController
     /**
      * @OA\Response(
      *     response=200,
-     *     description="Get cards",
+     *     description="Returns all active cards for the current user.",
      *     @OA\JsonContent(
      *          type="array",
      *          description="All of the customer's issued cards",

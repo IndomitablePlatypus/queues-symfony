@@ -17,7 +17,7 @@ class CustomerGetIdController extends ApiController
     /**
      * @OA\Response(
      *     response=200,
-     *     description="Customer Id",
+     *     description="Returns id of the authenticated user.",
      *     @OA\JsonContent(type="string", format="uuid", description="Current customer Id")
      * )
      */

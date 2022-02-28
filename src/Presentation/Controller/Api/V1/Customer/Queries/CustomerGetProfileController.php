@@ -19,7 +19,7 @@ class CustomerGetProfileController extends ApiController
     /**
      * @OA\Response(
      *     response=200,
-     *     description="Get card",
+     *     description="Returns profile.",
      *     @Model(type=Profile::class)
      * )
      */

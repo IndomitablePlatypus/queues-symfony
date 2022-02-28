@@ -23,18 +23,7 @@ class CustomerWorkspaces implements JsonSerializable
     public function jsonSerialize(): array
     {
         return [
-            ...array_map(fn($workspace) => $this->serializeWorkspace($workspace), $this->workspaces),
+            ...array_map(fn($workspace) => CustomerWorkspace::of($workspace)->jsonSerialize(), $this->workspaces),
         ];
     }
-
-    protected function serializeWorkspace(Workspace $workspace): array
-    {
-        return [
-            'workspaceId' => (string) $workspace->getId(),
-            'name' => $workspace->getProfile()->name,
-            'description' => $workspace->getProfile()->description,
-            'address' => $workspace->getProfile()->address,
-        ];
-    }
-
 }

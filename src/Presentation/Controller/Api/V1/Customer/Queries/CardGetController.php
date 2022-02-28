@@ -21,7 +21,7 @@ class CardGetController extends ApiController
     /**
      * @OA\Response(
      *     response=200,
-     *     description="Get card",
+     *     description="Returns an active card, owned by the current user, by its id.",
      *     @Model(type=IssuedCard::class)
      * )
      */

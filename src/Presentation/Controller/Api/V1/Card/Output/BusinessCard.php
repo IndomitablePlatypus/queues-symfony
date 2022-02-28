@@ -7,7 +7,24 @@ use App\Infrastructure\Support\ArrayPresenterTrait;
 use JsonSerializable;
 use OpenApi\Attributes\Items;
 use OpenApi\Attributes\Property;
+use OpenApi\Attributes\Schema;
 
+#[Schema(
+    title: "BusinessCard",
+    description: "Business card",
+    required: [
+        "cardId",
+        "planId",
+        "customerId",
+        "isIssued",
+        "isSatisfied",
+        "isCompleted",
+        "isRevoked",
+        "isBlocked",
+        "achievements",
+        "requirements",
+    ],
+)]
 class BusinessCard implements JsonSerializable
 {
     use ArrayPresenterTrait;

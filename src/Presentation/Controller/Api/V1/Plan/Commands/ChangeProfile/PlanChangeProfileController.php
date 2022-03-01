@@ -21,6 +21,8 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
 class PlanChangeProfileController extends ApiController
 {
     /**
+     * Change plan profile
+     *
      * @OA\Response(
      *     response=200,
      *     description="Changes plan profile. Requires user to be authorized to work in the current workspace.",

@@ -21,6 +21,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class PlanArchiveController extends ApiController
 {
     /**
+     * Archive a plan
+     *
      * @OA\Response(
      *     response=200,
      *     description="Archives plan. Archived plans are invisible by normal means. Plans are archived automatically on their expiration date. Requires user to be authorized to work in the current workspace.",

@@ -21,6 +21,22 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
 class PlanAddController extends ApiController
 {
     /**
+     * Add a new plan
+     *
+     * @OA\Parameter(
+     *     in="cookie",
+     *     name="name",
+     *     description="Plan name",
+     *     required=true,
+     *     allowEmptyValue=false,
+     * )
+     * @OA\Parameter(
+     *     in="cookie",
+     *     name="description",
+     *     description="Plan description",
+     *     required=true,
+     *     allowEmptyValue=false,
+     * )
      * @OA\Response(
      *     response=200,
      *     description="Adds a new plan to the current workspace. Requires user to be authorized to work in the current workspace.",

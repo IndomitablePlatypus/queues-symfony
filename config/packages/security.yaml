@@ -37,6 +37,7 @@ security:
         - { path: ^/api/v1/customer/register, roles: PUBLIC_ACCESS }
         - { path: ^/api/v1/customer/get-token, roles: PUBLIC_ACCESS }
         - { path: ^/api/v1/customer/workspaces, roles: PUBLIC_ACCESS }
+        - { path: ^/api/v1/doc, roles: PUBLIC_ACCESS }
         - { path: ^/api/v1, roles: IS_AUTHENTICATED_FULLY }
 
 when@test:

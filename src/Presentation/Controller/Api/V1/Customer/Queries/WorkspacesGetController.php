@@ -8,7 +8,6 @@ use App\Presentation\Controller\Api\V1\ApiController;
 use App\Presentation\Controller\Api\V1\Customer\Output\CustomerWorkspace;
 use App\Presentation\Controller\Api\V1\Customer\Output\CustomerWorkspaces;
 use Nelmio\ApiDocBundle\Annotation\Model;
-use Nelmio\ApiDocBundle\Annotation\Security;
 use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
@@ -26,8 +25,12 @@ class WorkspacesGetController extends ApiController
         description: 'List of all workspaces',
         content: new OA\JsonContent(
             type: 'array',
-            items: new OA\Items(ref: new Model(type: CustomerWorkspace::class, groups: ['full']))
+            items: new OA\Items(ref: new Model(type: CustomerWorkspace::class))
         )
+    )]
+    #[OA\Response(
+        ref: "#/components/responses/UnexpectedException",
+        response: 500,
     )]
     #[OA\Tag(name: 'customer')]
     #[Route('', name: RouteName::CUSTOMER_WORKSPACES, methods: ['GET'])]

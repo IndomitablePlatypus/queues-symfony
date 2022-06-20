@@ -5,7 +5,7 @@ namespace App\Presentation\Controller\Api\V1\Workspace\Commands\ChangeProfile;
 use App\Application\Services\WorkspaceService;
 use App\Config\Routing\RouteName;
 use App\Presentation\Controller\Api\V1\ApiController;
-use App\Presentation\Controller\Api\V1\Workspace\Commands\ChangeProfile\Input\Request;
+use App\Presentation\Controller\Api\V1\Workspace\Commands\ChangeProfile\Input\ChangeWorkspaceProfileRequest;
 use App\Presentation\Controller\Api\V1\Workspace\Output\BusinessWorkspace;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Annotations as OA;
@@ -29,7 +29,7 @@ class WorkspaceChangeProfileController extends ApiController
      */
     #[Route('/{workspaceId}/profile', name: RouteName::CHANGE_PROFILE, methods: ['PUT'])]
     public function changeProfile(
-        Request $request,
+        ChangeWorkspaceProfileRequest $request,
         WorkspaceService $workspaceService,
         ConstraintViolationListInterface $validationErrors,
     ): JsonResponse {

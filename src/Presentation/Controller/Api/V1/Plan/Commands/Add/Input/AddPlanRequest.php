@@ -7,7 +7,7 @@ use App\Domain\Dto\PlanProfile;
 use App\Infrastructure\Support\GuidBasedImmutableId;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class Request
+class AddPlanRequest
 {
     public function __construct(
         #[Assert\Type('string')]

@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Presentation\Controller\Api\V1\Plan\Requirement\Commands\Change\Input;
+namespace App\Presentation\Controller\Api\V1\Card\Commands\Issue\Input;
 
 use App\Application\Contracts\GenericIdInterface;
 use App\Infrastructure\Support\GuidBasedImmutableId;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class Request
+class IsuueCardRequest
 {
     public function __construct(
         #[Assert\Type('string')]
@@ -19,11 +19,11 @@ class Request
 
         #[Assert\Type('string')]
         #[Assert\NotBlank]
-        private ?string $requirementId,
+        private ?string $cardId,
 
         #[Assert\Type('string')]
         #[Assert\NotBlank]
-        private ?string $description,
+        private ?string $customerId,
     ) {
     }
 
@@ -37,14 +37,13 @@ class Request
         return GuidBasedImmutableId::of($this->planId);
     }
 
-    public function getRequirementId(): GenericIdInterface
+    public function getCardId(): GenericIdInterface
     {
-        return GuidBasedImmutableId::of($this->requirementId);
+        return GuidBasedImmutableId::of($this->cardId);
     }
 
-    public function getDescription(): string
+    public function getCustomerId(): GenericIdInterface
     {
-        return $this->description;
+        return GuidBasedImmutableId::of($this->customerId);
     }
-
 }

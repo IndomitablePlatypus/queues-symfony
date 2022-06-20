@@ -1,12 +1,14 @@
 <?php
 
-namespace App\Presentation\Controller\Api\V1\Card\Achievement\Commands\Dismiss\Input;
+namespace App\Presentation\Controller\Api\V1\Plan\Commands\Launch\Input;
 
 use App\Application\Contracts\GenericIdInterface;
+use App\Domain\Dto\PlanProfile;
 use App\Infrastructure\Support\GuidBasedImmutableId;
+use Carbon\Carbon;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class Request
+class LaunchPlanRequest
 {
     public function __construct(
         #[Assert\Type('string')]
@@ -15,11 +17,13 @@ class Request
 
         #[Assert\Type('string')]
         #[Assert\NotBlank]
-        private ?string $cardId,
+        private ?string $planId,
 
         #[Assert\Type('string')]
         #[Assert\NotBlank]
-        private ?string $achievementId,
+        #[Assert\DateTime]
+        #[Assert\GreaterThan('+1 days')]
+        private ?string $expirationDate,
     ) {
     }
 
@@ -28,13 +32,14 @@ class Request
         return GuidBasedImmutableId::of($this->workspaceId);
     }
 
-    public function getCardId(): GenericIdInterface
+    public function getPlanId(): GenericIdInterface
     {
-        return GuidBasedImmutableId::of($this->cardId);
+        return GuidBasedImmutableId::of($this->planId);
     }
 
-    public function getAchievementId(): GenericIdInterface
+    public function getExpirationDate(): Carbon
     {
-        return GuidBasedImmutableId::of($this->achievementId);
+        return new Carbon($this->expirationDate);
     }
+
 }

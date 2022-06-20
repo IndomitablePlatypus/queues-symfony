@@ -5,7 +5,7 @@ namespace App\Presentation\Controller\Api\V1\Customer\Commands\Register;
 use App\Application\Services\CustomerService;
 use App\Config\Routing\RouteName;
 use App\Presentation\Controller\Api\V1\ApiController;
-use App\Presentation\Controller\Api\V1\Customer\Commands\Register\Input\Request;
+use App\Presentation\Controller\Api\V1\Customer\Commands\Register\Input\RegisterCustomerRequest;
 use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
@@ -30,7 +30,7 @@ class CustomerRegisterController extends ApiController
     )]
     #[Route('/register', name: RouteName::REGISTER, methods: ['POST'])]
     public function register(
-        Request $request,
+        RegisterCustomerRequest $request,
         CustomerService $customerService,
         ConstraintViolationListInterface $validationErrors,
     ): JsonResponse {

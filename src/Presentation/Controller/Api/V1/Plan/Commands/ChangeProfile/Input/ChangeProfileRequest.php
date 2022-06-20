@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Presentation\Controller\Api\V1\Card\Commands\Issue\Input;
+namespace App\Presentation\Controller\Api\V1\Plan\Commands\ChangeProfile\Input;
 
 use App\Application\Contracts\GenericIdInterface;
+use App\Domain\Dto\PlanProfile;
 use App\Infrastructure\Support\GuidBasedImmutableId;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class Request
+class ChangeProfileRequest
 {
     public function __construct(
         #[Assert\Type('string')]
@@ -19,11 +20,11 @@ class Request
 
         #[Assert\Type('string')]
         #[Assert\NotBlank]
-        private ?string $cardId,
+        private ?string $name,
 
         #[Assert\Type('string')]
         #[Assert\NotBlank]
-        private ?string $customerId,
+        private ?string $description,
     ) {
     }
 
@@ -37,13 +38,12 @@ class Request
         return GuidBasedImmutableId::of($this->planId);
     }
 
-    public function getCardId(): GenericIdInterface
+    public function getProfile(): PlanProfile
     {
-        return GuidBasedImmutableId::of($this->cardId);
+        return PlanProfile::of(
+            $this->name,
+            $this->description,
+        );
     }
 
-    public function getCustomerId(): GenericIdInterface
-    {
-        return GuidBasedImmutableId::of($this->customerId);
-    }
 }

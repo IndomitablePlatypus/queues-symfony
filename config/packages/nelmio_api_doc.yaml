@@ -1,21 +1,150 @@
 nelmio_api_doc:
     documentation:
         servers:
-            - url: https://localhost/
-              description: API environment
+            -   url: '%env(APP_URL)%'
+                description: App Environment
+            -   url: 'http://localhost'
+                description: Default
         info:
-            title: Cardz Lite, Symfony edition
-            description: Bonus cards server-side application. Lite version. Symfony edition.
-            version: 0.1.1.45
+            title: '%env(APP_NAME)%'
+            description: '%env(APP_DESCRIPTION)%'
+            version: '%env(APP_VERSION)%'
         components:
+            responses:
+                ParametersAssertionException:
+                    description: Bad Request
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                required:
+                                    - message
+                                properties:
+                                    message:
+                                        description: Parameters Assertion Exception
+                                        type: string
+                                        nullable: false
+                                        example: Wrong string format for UUID
+                ValidationError:
+                    description: Validation errors
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                required:
+                                    - message
+                                    - errors
+                                properties:
+                                    message:
+                                        type: string
+                                        nullable: false
+                                        example: The given data was invalid.
+                                    errors:
+                                        type: object
+                                        additionalProperties:
+                                            type: array
+                                            items:
+                                                type: string
+                                        nullable: false
+                                        example:
+                                            field:
+                                                - Something is wrong with this field!
+                AuthorizationException:
+                    description: Forbidden
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                required:
+                                    - message
+                                properties:
+                                    message:
+                                        description: Authorization Exception
+                                        type: string
+                                        nullable: false
+                                        example: >-
+                                            Subject <Subject Id> is not authorized for <Resource Type>
+                                            <Resource Id>
+                UserAlreadyRegisteredException:
+                    description: Bad Request
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                required:
+                                    - message
+                                properties:
+                                    message:
+                                        description: User Already Registered Exception
+                                        type: string
+                                        nullable: false
+                                        example: User with given identity already registered
+                UnexpectedException:
+                    description: Internal Server Error
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                required:
+                                    - message
+                                properties:
+                                    message:
+                                        description: Unexpected Exception
+                                        type: string
+                                        nullable: false
+                                        example: Unexpected exception
+                NotFound:
+                    description: Not Found
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                required:
+                                    - message
+                                properties:
+                                    message:
+                                        description: Requested resource not found
+                                        type: string
+                                        nullable: false
+                                        example: 'Not found exception: <Resource Name>: <Resource Id>'
+                AuthenticationException:
+                    description: Unauthorized
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                required:
+                                    - message
+                                properties:
+                                    message:
+                                        description: Authentication Exception
+                                        type: string
+                                        nullable: false
+                                        example: Invalid access token
+                DomainException:
+                    description: Bad Request
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                required:
+                                    - message
+                                properties:
+                                    message:
+                                        description: Domain Exception
+                                        type: string
+                                        nullable: false
+                                        example: Domain logic forbids requested operation
             securitySchemes:
-                Bearer:
+                BearerToken:
+                    name: Authorization
+                    in: header
                     type: http
                     scheme: bearer
                     bearerFormat: JWT
-                    in: header
         security:
-            -   Bearer: []
+            -   BearerToken: [ ]
+
     areas: # to filter documented areas
         path_patterns:
-            - ^/api(?!/doc.json$) # Accepts routes under /api except /api/doc
+            - ^/api/v1(?!/doc) # Accepts routes under /api except /api/doc

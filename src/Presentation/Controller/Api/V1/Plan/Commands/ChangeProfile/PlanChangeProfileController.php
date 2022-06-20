@@ -5,7 +5,7 @@ namespace App\Presentation\Controller\Api\V1\Plan\Commands\ChangeProfile;
 use App\Application\Services\PlanService;
 use App\Config\Routing\RouteName;
 use App\Presentation\Controller\Api\V1\ApiController;
-use App\Presentation\Controller\Api\V1\Plan\Commands\ChangeProfile\Input\Request;
+use App\Presentation\Controller\Api\V1\Plan\Commands\ChangeProfile\Input\ChangeProfileRequest;
 use App\Presentation\Controller\Api\V1\Plan\Output\BusinessPlan;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Annotations as OA;
@@ -31,7 +31,7 @@ class PlanChangeProfileController extends ApiController
      */
     #[Route('/{planId}/profile', name: RouteName::CHANGE_PLAN_PROFILE, methods: ['PUT'])]
     public function changeProfile(
-        Request $request,
+        ChangeProfileRequest $request,
         PlanService $planService,
         ConstraintViolationListInterface $validationErrors,
     ): JsonResponse {

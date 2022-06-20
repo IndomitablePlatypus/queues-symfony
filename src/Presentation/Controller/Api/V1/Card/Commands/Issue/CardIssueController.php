@@ -5,7 +5,7 @@ namespace App\Presentation\Controller\Api\V1\Card\Commands\Issue;
 use App\Application\Services\CardService;
 use App\Config\Routing\RouteName;
 use App\Presentation\Controller\Api\V1\ApiController;
-use App\Presentation\Controller\Api\V1\Card\Commands\Issue\Input\Request;
+use App\Presentation\Controller\Api\V1\Card\Commands\Issue\Input\IsuueCardRequest;
 use App\Presentation\Controller\Api\V1\Card\Output\BusinessCard;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Annotations as OA;
@@ -29,7 +29,7 @@ class CardIssueController extends ApiController
      */
     #[Route('', name: RouteName::ISSUE_CARD, methods: ['POST'])]
     public function issue(
-        Request $request,
+        IsuueCardRequest $request,
         CardService $cardService,
         ConstraintViolationListInterface $validationErrors,
     ): JsonResponse {

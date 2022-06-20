@@ -5,33 +5,28 @@ namespace App\Presentation\Controller\Api\V1\Customer\Output;
 use App\Domain\Entity\Workspace;
 use App\Infrastructure\Support\ArrayPresenterTrait;
 use JsonSerializable;
-use OpenApi\Attributes\Property;
-use OpenApi\Attributes\Schema;
+use OpenApi\Attributes as OA;
 
-#[Schema(
+#[OA\Schema(
     title: "CustomerWorkspace",
     description: "Customer Workspace",
-    required: [
-        "workspaceId",
-        "name",
-        "description",
-        "address",
-    ],
-)] class CustomerWorkspace implements JsonSerializable
+    required: ['workspaceId', 'name', 'description', 'description']
+)]
+class CustomerWorkspace implements JsonSerializable
 {
     use ArrayPresenterTrait;
 
     public function __construct(
-        #[Property(description: "Workspace Id", format: "uuid", nullable: false)]
-        public string $cardId,
+        #[OA\Property(description: 'Workspace Id', format: 'uuid', nullable: false)]
+        public string $workspaceId,
 
-        #[Property(description: "Workspace (business) name", example: "Café!", nullable: false)]
+        #[OA\Property(description: 'Workspace (business) name', example: 'Coffee shop', nullable: false)]
         public string $name,
 
-        #[Property(description: "Workspace (business) description", example: "The greatest Café of all times", nullable: false)]
+        #[OA\Property(description: 'Workspace (business) description', example: 'The best coffee shop', nullable: false)]
         public string $description,
 
-        #[Property(description: "Workspace (business) address", example: "Mapping street 17, Longitude county, Liberland", nullable: false)]
+        #[OA\Property(description: 'Workspace (business) address', example: '40193 Luther Road Suite 303 Goldenchester, PA 40395', nullable: false)]
         public string $address,
     ) {
     }
@@ -48,7 +43,6 @@ use OpenApi\Attributes\Schema;
 
     public function jsonSerialize(): array
     {
-        return $this->_toArray(publicOnly: true);
+        return $this->_toArray(publicOnly: true, ownOnly: true);
     }
-
 }

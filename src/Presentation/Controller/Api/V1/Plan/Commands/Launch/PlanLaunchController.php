@@ -5,7 +5,7 @@ namespace App\Presentation\Controller\Api\V1\Plan\Commands\Launch;
 use App\Application\Services\PlanService;
 use App\Config\Routing\RouteName;
 use App\Presentation\Controller\Api\V1\ApiController;
-use App\Presentation\Controller\Api\V1\Plan\Commands\Launch\Input\Request;
+use App\Presentation\Controller\Api\V1\Plan\Commands\Launch\Input\LaunchPlanRequest;
 use App\Presentation\Controller\Api\V1\Plan\Output\BusinessPlan;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Annotations as OA;
@@ -29,7 +29,7 @@ class PlanLaunchController extends ApiController
      */
     #[Route('/{planId}/launch', name: RouteName::LAUNCH_PLAN, methods: ['PUT'])]
     public function changeProfile(
-        Request $request,
+        LaunchPlanRequest $request,
         PlanService $planService,
         ConstraintViolationListInterface $validationErrors,
     ): JsonResponse {

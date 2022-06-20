@@ -10,6 +10,8 @@ class RequestConverter extends BaseRequestConverter
 {
     public function apply(HttpRequest $httpRequest, ParamConverter $configuration): bool
     {
+        $httpRequest->request->add(json_decode($httpRequest->getContent(), true));
+        //dd(json_decode($httpRequest->getContent()));
         $request = new Request(
             $httpRequest->request->get('identity'),
             $httpRequest->request->get('password'),

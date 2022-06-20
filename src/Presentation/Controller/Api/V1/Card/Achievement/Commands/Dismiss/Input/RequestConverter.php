@@ -8,19 +8,17 @@ use Symfony\Component\HttpFoundation\Request as HttpRequest;
 
 class RequestConverter extends BaseRequestConverter
 {
-    public function apply(HttpRequest $httpRequest, ParamConverter $configuration): bool
+    public function supports(ParamConverter $configuration): bool
     {
-        $request = new Request(
+        return DismissAchievementRequest::class === $configuration->getClass();
+    }
+
+    protected function buildRequest(HttpRequest $httpRequest, ParamConverter $configuration): DismissAchievementRequest
+    {
+        return new DismissAchievementRequest(
             $httpRequest->attributes->get('workspaceId'),
             $httpRequest->attributes->get('cardId'),
             $httpRequest->attributes->get('achievementId'),
         );
-        $this->validateAndApply($request, $httpRequest, $configuration);
-        return true;
-    }
-
-    public function supports(ParamConverter $configuration): bool
-    {
-        return Request::class === $configuration->getClass();
     }
 }

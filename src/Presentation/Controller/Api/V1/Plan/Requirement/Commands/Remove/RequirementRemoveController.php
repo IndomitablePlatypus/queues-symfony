@@ -6,7 +6,7 @@ use App\Application\Services\PlanService;
 use App\Config\Routing\RouteName;
 use App\Presentation\Controller\Api\V1\ApiController;
 use App\Presentation\Controller\Api\V1\Plan\Output\BusinessPlan;
-use App\Presentation\Controller\Api\V1\Plan\Requirement\Commands\Change\Input\Request;
+use App\Presentation\Controller\Api\V1\Plan\Requirement\Commands\Change\Input\ChangeRequirementRequest;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
@@ -16,7 +16,7 @@ class RequirementRemoveController extends ApiController
 {
     #[Route('', name: RouteName::REMOVE_PLAN_REQUIREMENT, methods: ['DELETE'])]
     public function remove(
-        Request $request,
+        ChangeRequirementRequest $request,
         PlanService $planService,
         ConstraintViolationListInterface $validationErrors,
     ): JsonResponse {

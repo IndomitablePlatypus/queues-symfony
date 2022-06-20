@@ -6,7 +6,7 @@ use App\Application\Services\CustomerService;
 use App\Config\Routing\RouteName;
 use App\Domain\Messages\ClearTokens;
 use App\Presentation\Controller\Api\V1\ApiController;
-use App\Presentation\Controller\Api\V1\Customer\Commands\Register\Input\Request;
+use App\Presentation\Controller\Api\V1\Customer\Commands\Register\Input\RegisterCustomerRequest;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;

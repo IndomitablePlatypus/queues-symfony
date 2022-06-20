@@ -6,7 +6,7 @@ use App\Application\Contracts\GenericIdInterface;
 use App\Infrastructure\Support\GuidBasedImmutableId;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class Request
+class RemoveRequirementRequest
 {
     public function __construct(
         #[Assert\Type('string')]

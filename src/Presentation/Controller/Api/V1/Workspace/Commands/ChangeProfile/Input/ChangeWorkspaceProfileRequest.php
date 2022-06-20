@@ -1,29 +1,30 @@
 <?php
 
-namespace App\Presentation\Controller\Api\V1\Plan\Requirement\Commands\Add\Input;
+namespace App\Presentation\Controller\Api\V1\Workspace\Commands\ChangeProfile\Input;
 
 use App\Application\Contracts\GenericIdInterface;
+use App\Domain\Dto\WorkspaceProfile;
 use App\Infrastructure\Support\GuidBasedImmutableId;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class Request
+final class ChangeWorkspaceProfileRequest
 {
     public function __construct(
         #[Assert\Type('string')]
         #[Assert\NotBlank]
-        private ?string $workspaceId,
+        private  ?string $workspaceId,
 
         #[Assert\Type('string')]
         #[Assert\NotBlank]
-        private ?string $planId,
+        private  ?string $name,
 
         #[Assert\Type('string')]
         #[Assert\NotBlank]
-        private ?string $requirementId,
+        private  ?string $description,
 
         #[Assert\Type('string')]
         #[Assert\NotBlank]
-        private ?string $description,
+        private  ?string $address,
     ) {
     }
 
@@ -32,19 +33,12 @@ class Request
         return GuidBasedImmutableId::of($this->workspaceId);
     }
 
-    public function getPlanId(): GenericIdInterface
+    public function getProfile(): WorkspaceProfile
     {
-        return GuidBasedImmutableId::of($this->planId);
+        return WorkspaceProfile::of(
+            $this->name,
+            $this->description,
+            $this->address,
+        );
     }
-
-    public function getRequirementId(): GenericIdInterface
-    {
-        return GuidBasedImmutableId::of($this->requirementId);
-    }
-
-    public function getDescription(): string
-    {
-        return $this->description;
-    }
-
 }

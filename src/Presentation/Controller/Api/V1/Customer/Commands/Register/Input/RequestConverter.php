@@ -8,20 +8,19 @@ use Symfony\Component\HttpFoundation\Request as HttpRequest;
 
 class RequestConverter extends BaseRequestConverter
 {
-    public function apply(HttpRequest $httpRequest, ParamConverter $configuration): bool
+    public function supports(ParamConverter $configuration): bool
     {
-        $request = new Request(
+        return RegisterCustomerRequest::class === $configuration->getClass();
+    }
+
+    protected function buildRequest(HttpRequest $httpRequest, ParamConverter $configuration): RegisterCustomerRequest
+    {
+        return new RegisterCustomerRequest(
             $httpRequest->request->get('phone'),
             $httpRequest->request->get('name'),
             $httpRequest->request->get('password'),
             $httpRequest->request->get('deviceName'),
         );
-        $this->validateAndApply($request, $httpRequest, $configuration);
-        return true;
     }
 
-    public function supports(ParamConverter $configuration): bool
-    {
-        return Request::class === $configuration->getClass();
-    }
 }

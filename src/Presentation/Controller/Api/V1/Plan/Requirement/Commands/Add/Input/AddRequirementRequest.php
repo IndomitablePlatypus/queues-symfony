@@ -1,14 +1,12 @@
 <?php
 
-namespace App\Presentation\Controller\Api\V1\Plan\Commands\Launch\Input;
+namespace App\Presentation\Controller\Api\V1\Plan\Requirement\Commands\Add\Input;
 
 use App\Application\Contracts\GenericIdInterface;
-use App\Domain\Dto\PlanProfile;
 use App\Infrastructure\Support\GuidBasedImmutableId;
-use Carbon\Carbon;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class Request
+class AddRequirementRequest
 {
     public function __construct(
         #[Assert\Type('string')]
@@ -21,9 +19,11 @@ class Request
 
         #[Assert\Type('string')]
         #[Assert\NotBlank]
-        #[Assert\DateTime]
-        #[Assert\GreaterThan('+1 days')]
-        private ?string $expirationDate,
+        private ?string $requirementId,
+
+        #[Assert\Type('string')]
+        #[Assert\NotBlank]
+        private ?string $description,
     ) {
     }
 
@@ -37,9 +37,14 @@ class Request
         return GuidBasedImmutableId::of($this->planId);
     }
 
-    public function getExpirationDate(): Carbon
+    public function getRequirementId(): GenericIdInterface
     {
-        return new Carbon($this->expirationDate);
+        return GuidBasedImmutableId::of($this->requirementId);
+    }
+
+    public function getDescription(): string
+    {
+        return $this->description;
     }
 
 }

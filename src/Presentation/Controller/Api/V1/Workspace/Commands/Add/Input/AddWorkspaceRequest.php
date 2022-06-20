@@ -7,7 +7,7 @@ use App\Domain\Dto\WorkspaceProfile;
 use App\Infrastructure\Support\GuidBasedImmutableId;
 use Symfony\Component\Validator\Constraints as Assert;
 
-final class Request
+final class AddWorkspaceRequest
 {
     public function __construct(
         #[Assert\Type('string')]

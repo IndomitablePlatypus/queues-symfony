@@ -1,30 +1,25 @@
 <?php
 
-namespace App\Presentation\Controller\Api\V1\Workspace\Commands\ChangeProfile\Input;
+namespace App\Presentation\Controller\Api\V1\Card\Achievement\Commands\Dismiss\Input;
 
 use App\Application\Contracts\GenericIdInterface;
-use App\Domain\Dto\WorkspaceProfile;
 use App\Infrastructure\Support\GuidBasedImmutableId;
 use Symfony\Component\Validator\Constraints as Assert;
 
-final class Request
+class DismissAchievementRequest
 {
     public function __construct(
         #[Assert\Type('string')]
         #[Assert\NotBlank]
-        private  ?string $workspaceId,
+        private ?string $workspaceId,
 
         #[Assert\Type('string')]
         #[Assert\NotBlank]
-        private  ?string $name,
+        private ?string $cardId,
 
         #[Assert\Type('string')]
         #[Assert\NotBlank]
-        private  ?string $description,
-
-        #[Assert\Type('string')]
-        #[Assert\NotBlank]
-        private  ?string $address,
+        private ?string $achievementId,
     ) {
     }
 
@@ -33,12 +28,13 @@ final class Request
         return GuidBasedImmutableId::of($this->workspaceId);
     }
 
-    public function getProfile(): WorkspaceProfile
+    public function getCardId(): GenericIdInterface
     {
-        return WorkspaceProfile::of(
-            $this->name,
-            $this->description,
-            $this->address,
-        );
+        return GuidBasedImmutableId::of($this->cardId);
+    }
+
+    public function getAchievementId(): GenericIdInterface
+    {
+        return GuidBasedImmutableId::of($this->achievementId);
     }
 }

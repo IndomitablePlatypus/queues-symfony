@@ -5,7 +5,7 @@ namespace App\Presentation\Controller\Api\V1\Plan\Commands\Add;
 use App\Application\Services\PlanService;
 use App\Config\Routing\RouteName;
 use App\Presentation\Controller\Api\V1\ApiController;
-use App\Presentation\Controller\Api\V1\Plan\Commands\Add\Input\Request;
+use App\Presentation\Controller\Api\V1\Plan\Commands\Add\Input\AddPlanRequest;
 use App\Presentation\Controller\Api\V1\Plan\Output\BusinessPlan;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
@@ -16,7 +16,7 @@ class PlanAddController extends ApiController
 {
     #[Route('', name: RouteName::ADD_PLAN, methods: ['POST'])]
     public function add(
-        Request $request,
+        AddPlanRequest $request,
         PlanService $planService,
         ConstraintViolationListInterface $validationErrors,
     ): JsonResponse {

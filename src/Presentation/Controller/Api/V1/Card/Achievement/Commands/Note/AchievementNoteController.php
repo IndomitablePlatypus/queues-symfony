@@ -5,7 +5,7 @@ namespace App\Presentation\Controller\Api\V1\Card\Achievement\Commands\Note;
 use App\Application\Services\CardService;
 use App\Config\Routing\RouteName;
 use App\Presentation\Controller\Api\V1\ApiController;
-use App\Presentation\Controller\Api\V1\Card\Achievement\Commands\Note\Input\Request;
+use App\Presentation\Controller\Api\V1\Card\Achievement\Commands\Note\Input\NoteAchievementRequest;
 use App\Presentation\Controller\Api\V1\Card\Output\BusinessCard;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
@@ -16,7 +16,7 @@ class AchievementNoteController extends ApiController
 {
     #[Route('', name: RouteName::NOTE_ACHIEVEMENT, methods: ['POST'])]
     public function note(
-        Request $request,
+        NoteAchievementRequest $request,
         CardService $cardService,
         ConstraintViolationListInterface $validationErrors,
     ): JsonResponse {

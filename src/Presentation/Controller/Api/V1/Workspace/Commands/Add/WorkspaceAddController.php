@@ -5,7 +5,7 @@ namespace App\Presentation\Controller\Api\V1\Workspace\Commands\Add;
 use App\Application\Services\WorkspaceService;
 use App\Config\Routing\RouteName;
 use App\Presentation\Controller\Api\V1\ApiController;
-use App\Presentation\Controller\Api\V1\Workspace\Commands\Add\Input\Request;
+use App\Presentation\Controller\Api\V1\Workspace\Commands\Add\Input\AddWorkspaceRequest;
 use App\Presentation\Controller\Api\V1\Workspace\Output\BusinessWorkspace;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
@@ -16,7 +16,7 @@ class WorkspaceAddController extends ApiController
 {
     #[Route('', name: RouteName::ADD_WORKSPACE, methods: ['POST'])]
     public function add(
-        Request $request,
+        AddWorkspaceRequest $request,
         WorkspaceService $workspaceService,
         ConstraintViolationListInterface $validationErrors,
     ): JsonResponse {

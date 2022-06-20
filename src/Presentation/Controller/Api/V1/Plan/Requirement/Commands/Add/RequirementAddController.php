@@ -6,7 +6,7 @@ use App\Application\Services\PlanService;
 use App\Config\Routing\RouteName;
 use App\Presentation\Controller\Api\V1\ApiController;
 use App\Presentation\Controller\Api\V1\Plan\Output\BusinessPlan;
-use App\Presentation\Controller\Api\V1\Plan\Requirement\Commands\Add\Input\Request;
+use App\Presentation\Controller\Api\V1\Plan\Requirement\Commands\Add\Input\AddRequirementRequest;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
@@ -16,7 +16,7 @@ class RequirementAddController extends ApiController
 {
     #[Route('', name: RouteName::ADD_PLAN_REQUIREMENT, methods: ['POST'])]
     public function add(
-        Request $request,
+        AddRequirementRequest $request,
         PlanService $planService,
         ConstraintViolationListInterface $validationErrors,
     ): JsonResponse {

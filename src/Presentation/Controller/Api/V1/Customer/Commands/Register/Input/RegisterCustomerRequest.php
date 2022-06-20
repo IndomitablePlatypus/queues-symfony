@@ -4,7 +4,7 @@ namespace App\Presentation\Controller\Api\V1\Customer\Commands\Register\Input;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class Request
+class RegisterCustomerRequest
 {
     public function __construct(
         #[Assert\Type('string')]

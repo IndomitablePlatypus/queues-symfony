@@ -6,12 +6,11 @@ use OpenApi\Attributes as OA;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[OA\Schema(
-    title: 'GetTokenRequest',
     description: 'New API access token for the specific device request',
     required: ['identity', 'password', 'deviceName'],
     type: 'object',
 )]
-class Request
+class GetTokenRequest
 {
     public function __construct(
         #[Assert\Type('string')]

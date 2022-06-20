@@ -12,7 +12,7 @@ class RequestConverter extends BaseRequestConverter
     {
         $httpRequest->request->add(json_decode($httpRequest->getContent(), true));
         //dd(json_decode($httpRequest->getContent()));
-        $request = new Request(
+        $request = new GetTokenRequest(
             $httpRequest->request->get('identity'),
             $httpRequest->request->get('password'),
             $httpRequest->request->get('deviceName'),
@@ -23,6 +23,6 @@ class RequestConverter extends BaseRequestConverter
 
     public function supports(ParamConverter $configuration): bool
     {
-        return Request::class === $configuration->getClass();
+        return GetTokenRequest::class === $configuration->getClass();
     }
 }

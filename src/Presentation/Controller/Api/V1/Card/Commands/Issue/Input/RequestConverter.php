@@ -11,12 +11,12 @@ class RequestConverter extends BaseRequestConverter
 {
     public function supports(ParamConverter $configuration): bool
     {
-        return IsuueCardRequest::class === $configuration->getClass();
+        return IssueCardRequest::class === $configuration->getClass();
     }
 
-    protected function buildRequest(HttpRequest $httpRequest, ParamConverter $configuration): IsuueCardRequest
+    protected function buildRequest(HttpRequest $httpRequest, ParamConverter $configuration): IssueCardRequest
     {
-        return new IsuueCardRequest(
+        return new IssueCardRequest(
             $httpRequest->attributes->get('workspaceId'),
             $httpRequest->request->get('planId'),
             GuidBasedImmutableId::makeValue(),

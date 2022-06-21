@@ -32,7 +32,7 @@ class CardRevokeController extends ApiController
     #[OA\Response(ref: "#/components/responses/AuthorizationException", response: 403)]
     #[OA\Response(ref: "#/components/responses/NotFound", response: 404)]
     #[OA\Response(ref: "#/components/responses/UnexpectedException", response: 500)]
-    #[Route('/revoke', name: RouteName::REVOKE_CARD, methods: ['PUT'])]
+    #[Route('/revoke', name: RouteName::REVOKE_CARD, methods: ['PUT'], priority: 90)]
     public function revoke(
         Request $request,
         CardService $cardService,

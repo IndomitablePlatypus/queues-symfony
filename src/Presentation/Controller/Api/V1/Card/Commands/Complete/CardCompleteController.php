@@ -32,7 +32,7 @@ class CardCompleteController extends ApiController
     #[OA\Response(ref: "#/components/responses/AuthorizationException", response: 403)]
     #[OA\Response(ref: "#/components/responses/NotFound", response: 404)]
     #[OA\Response(ref: "#/components/responses/UnexpectedException", response: 500)]
-    #[Route('/complete', name: RouteName::COMPLETE_CARD, methods: ['PUT'])]
+    #[Route('/complete', name: RouteName::COMPLETE_CARD, methods: ['PUT'], priority: 95)]
     public function complete(
         Request $request,
         CardService $cardService,

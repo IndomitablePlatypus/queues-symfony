@@ -32,7 +32,7 @@ class CardBlockController extends ApiController
     #[OA\Response(ref: "#/components/responses/AuthorizationException", response: 403)]
     #[OA\Response(ref: "#/components/responses/NotFound", response: 404)]
     #[OA\Response(ref: "#/components/responses/UnexpectedException", response: 500)]
-    #[Route('/block', name: RouteName::BLOCK_CARD, methods: ['PUT'])]
+    #[Route('/block', name: RouteName::BLOCK_CARD, methods: ['PUT'], priority: 85)]
     public function block(
         Request $request,
         CardService $cardService,

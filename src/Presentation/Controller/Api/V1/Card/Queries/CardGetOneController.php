@@ -31,7 +31,7 @@ class CardGetOneController extends ApiController
     #[OA\Response(ref: "#/components/responses/AuthorizationException", response: 403)]
     #[OA\Response(ref: "#/components/responses/NotFound", response: 404)]
     #[OA\Response(ref: "#/components/responses/UnexpectedException", response: 500)]
-    #[Route('', name: RouteName::GET_CARD, methods: ['GET'])]
+    #[Route('', name: RouteName::GET_CARD, methods: ['GET'], priority: 100)]
     public function getCard(
         Request $request,
         CollaboratingWorkspaceRepositoryInterface $collaboratingWorkspaceRepository,

@@ -37,7 +37,7 @@ class AchievementNoteController extends ApiController
     #[OA\Response(ref: "#/components/responses/NotFound", response: 404)]
     #[OA\Response(ref: "#/components/responses/ValidationError", response: 422)]
     #[OA\Response(ref: "#/components/responses/UnexpectedException", response: 500)]
-    #[Route('', name: RouteName::NOTE_ACHIEVEMENT, methods: ['POST'])]
+    #[Route('', name: RouteName::NOTE_ACHIEVEMENT, methods: ['POST'], priority: 75)]
     public function note(
         NoteAchievementRequest $request,
         CardService $cardService,

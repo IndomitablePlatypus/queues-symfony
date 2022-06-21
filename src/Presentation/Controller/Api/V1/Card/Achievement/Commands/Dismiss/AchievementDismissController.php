@@ -32,7 +32,7 @@ class AchievementDismissController extends ApiController
     #[OA\Response(ref: "#/components/responses/AuthenticationException", response: 401)]
     #[OA\Response(ref: "#/components/responses/ValidationError", response: 422)]
     #[OA\Response(ref: "#/components/responses/UnexpectedException", response: 500)]
-    #[Route('', name: RouteName::DISMISS_ACHIEVEMENT, methods: ['DELETE'])]
+    #[Route('', name: RouteName::DISMISS_ACHIEVEMENT, methods: ['DELETE'], priority: 70)]
     public function dismiss(
         DismissAchievementRequest $request,
         CardService $cardService,

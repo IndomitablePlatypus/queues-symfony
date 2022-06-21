@@ -5,7 +5,7 @@ namespace App\Presentation\Controller\Api\V1\Card\Commands\Issue;
 use App\Application\Services\CardService;
 use App\Config\Routing\RouteName;
 use App\Presentation\Controller\Api\V1\ApiController;
-use App\Presentation\Controller\Api\V1\Card\Commands\Issue\Input\IsuueCardRequest;
+use App\Presentation\Controller\Api\V1\Card\Commands\Issue\Input\IssueCardRequest;
 use App\Presentation\Controller\Api\V1\Card\Commands\Issue\Input\NewCard;
 use App\Presentation\Controller\Api\V1\Card\Output\BusinessCard;
 use Nelmio\ApiDocBundle\Annotation\Model;
@@ -34,9 +34,9 @@ class CardIssueController extends ApiController
     #[OA\Response(ref: "#/components/responses/NotFound", response: 404)]
     #[OA\Response(ref: "#/components/responses/ValidationError", response: 422)]
     #[OA\Response(ref: "#/components/responses/UnexpectedException", response: 500)]
-    #[Route('', name: RouteName::ISSUE_CARD, methods: ['POST'])]
+    #[Route('', name: RouteName::ISSUE_CARD, methods: ['POST'], priority: 110)]
     public function issue(
-        IsuueCardRequest $request,
+        IssueCardRequest $request,
         CardService $cardService,
         ConstraintViolationListInterface $validationErrors,
     ): JsonResponse {

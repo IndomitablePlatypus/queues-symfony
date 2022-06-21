@@ -32,7 +32,7 @@ class CardUnblockController extends ApiController
     #[OA\Response(ref: "#/components/responses/AuthorizationException", response: 403)]
     #[OA\Response(ref: "#/components/responses/NotFound", response: 404)]
     #[OA\Response(ref: "#/components/responses/UnexpectedException", response: 500)]
-    #[Route('/unblock', name: RouteName::UNBLOCK_CARD, methods: ['PUT'])]
+    #[Route('/unblock', name: RouteName::UNBLOCK_CARD, methods: ['PUT'], priority: 80)]
     public function unblock(
         Request $request,
         CardService $cardService,

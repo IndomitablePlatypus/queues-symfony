@@ -5,6 +5,7 @@ namespace App\Presentation\Controller\Api\V1\Customer\Commands\GetToken;
 use App\Application\Services\CustomerService;
 use App\Config\Routing\RouteName;
 use App\Presentation\Controller\Api\V1\ApiController;
+use App\Presentation\Controller\Api\V1\Customer\Commands\GetToken\Input\GetCustomerAccessToken;
 use App\Presentation\Controller\Api\V1\Customer\Commands\GetToken\Input\GetTokenRequest;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Attributes as OA;
@@ -21,11 +22,7 @@ class CustomerGetTokenController extends ApiController
      *
      * Returns new API user token (for basic bearer auth). Requires identity, password and device name.
      */
-    #[OA\RequestBody(
-        content: new OA\JsonContent(
-            ref: new Model(type: GetTokenRequest::class),
-        ),
-    )]
+    #[OA\RequestBody(content: new OA\JsonContent(ref: new Model(type: GetCustomerAccessToken::class)))]
     #[OA\Response(
         response: 200,
         description: 'Access token',
@@ -39,7 +36,7 @@ class CustomerGetTokenController extends ApiController
     #[OA\Response(ref: "#/components/responses/AuthenticationException", response: 401)]
     #[OA\Response(ref: "#/components/responses/ValidationError", response: 422)]
     #[OA\Response(ref: "#/components/responses/UnexpectedException", response: 500)]
-    #[Route('/get-token', name: RouteName::GET_TOKEN, methods: ['POST'])]
+    #[Route('/get-token', name: RouteName::GET_TOKEN, methods: ['POST'], priority: 1035)]
     public function getToken(
         GetTokenRequest $request,
         CustomerService $customerService,

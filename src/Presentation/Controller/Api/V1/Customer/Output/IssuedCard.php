@@ -30,7 +30,7 @@ class IssuedCard implements JsonSerializable
     use ArrayPresenterTrait;
 
     public function __construct(
-        #[Property(description: "Card Id", format: "uuid", nullable: false)]
+        #[Property(description: "Card Id", format: "uuid", example: '41c8613d-6ae2-41ad-841a-ffd06a116961', nullable: false)]
         public string $cardId,
 
         #[Property(description: "Workspace (business) name", example: "Coffee shop", nullable: false)]

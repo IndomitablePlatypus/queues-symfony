@@ -29,11 +29,8 @@ class WorkspacesGetController extends ApiController
             items: new OA\Items(ref: new Model(type: CustomerWorkspace::class))
         )
     )]
-    #[OA\Response(
-        ref: "#/components/responses/UnexpectedException",
-        response: 500,
-    )]
-    #[Route('', name: RouteName::CUSTOMER_WORKSPACES, methods: ['GET'])]
+    #[OA\Response(ref: "#/components/responses/UnexpectedException", response: 500)]
+    #[Route('', name: RouteName::CUSTOMER_WORKSPACES, methods: ['GET'], priority: 1020)]
     public function getWorkspaces(WorkspaceRepositoryInterface $workspaceRepository): JsonResponse
     {
         return $this->respond(CustomerWorkspaces::of(...$workspaceRepository->takeAll()));

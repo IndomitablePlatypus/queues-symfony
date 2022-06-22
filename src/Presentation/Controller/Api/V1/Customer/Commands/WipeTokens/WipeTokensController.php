@@ -5,8 +5,6 @@ namespace App\Presentation\Controller\Api\V1\Customer\Commands\WipeTokens;
 use App\Config\Routing\RouteName;
 use App\Domain\Messages\ClearTokens;
 use App\Presentation\Controller\Api\V1\ApiController;
-use App\Presentation\Controller\Api\V1\Customer\Commands\Register\Input\RegisterRequest;
-use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -33,7 +31,7 @@ class WipeTokensController extends ApiController
     )]
     #[OA\Response(ref: "#/components/responses/AuthenticationException", response: 401)]
     #[OA\Response(ref: "#/components/responses/UnexpectedException", response: 500)]
-    #[Route('/wipe-tokens', name: RouteName::CLEAR_TOKENS, methods: ['GET'])]
+    #[Route('/wipe-tokens', name: RouteName::CLEAR_TOKENS, methods: ['GET'], priority: 1025)]
     public function register(MessageBusInterface $messageBus): JsonResponse
     {
         $userId = $this->getUser()->getId();

@@ -24,7 +24,7 @@ class Profile implements JsonSerializable
     use ArrayPresenterTrait;
 
     public function __construct(
-        #[Property(description: "Profile Id", format: "uuid", nullable: false)]
+        #[Property(description: "Profile Id", format: "uuid", example: '41c8613d-6ae2-41ad-841a-ffd06a116961', nullable: false)]
         public string $profileId,
 
         #[Property(description: "Customer name", example: "Lucas Al Capone", nullable: false)]

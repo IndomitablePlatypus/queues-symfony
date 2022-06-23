@@ -3,7 +3,7 @@
     "info": {
         "title": "Cardz Lite, Symfony edition",
         "description": "Bonus cards server-side application lite version",
-        "version": "0.1.1.68"
+        "version": "0.1.1.70"
     },
     "servers": [
         {
@@ -16,6 +16,184 @@
         }
     ],
     "paths": {
+        "\/api\/v1\/workspace": {
+            "get": {
+                "tags": [
+                    "Business",
+                    "Workspace"
+                ],
+                "summary": "Get a workspace",
+                "description": "Returns workspace where the current user is a collaborator.\nRequires user to be authorized to work in this workspace.",
+                "operationId": "get_ListAllWorkspace",
+                "responses": {
+                    "200": {
+                        "description": "List all workspaces of the current collaborator",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#\/components\/schemas\/BusinessWorkspace"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#\/components\/responses\/AuthenticationException"
+                    },
+                    "500": {
+                        "$ref": "#\/components\/responses\/UnexpectedException"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Business",
+                    "Workspace"
+                ],
+                "summary": "Add a new workspace",
+                "description": "Returns the newly created workspace where the current user is an owner.",
+                "operationId": "post_AddWorkspace",
+                "requestBody": {
+                    "description": "Add workspace request",
+                    "content": {
+                        "application\/json": {
+                            "schema": {
+                                "$ref": "#\/components\/schemas\/WorkspaceProfile"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Business Workspace",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/BusinessWorkspace"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#\/components\/responses\/AuthenticationException"
+                    },
+                    "422": {
+                        "$ref": "#\/components\/responses\/ValidationError"
+                    },
+                    "500": {
+                        "$ref": "#\/components\/responses\/UnexpectedException"
+                    }
+                }
+            }
+        },
+        "\/api\/v1\/workspace\/{workspaceId}": {
+            "get": {
+                "tags": [
+                    "Business",
+                    "Workspace"
+                ],
+                "summary": "Get a workspace",
+                "description": "Returns workspace where the current user is a collaborator.\nRequires user to be authorized to work in this workspace.",
+                "operationId": "get_GetWorkspace",
+                "parameters": [
+                    {
+                        "name": "workspaceId",
+                        "in": "path",
+                        "description": "Workspace GUID",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "example": "41c8613d-6ae2-41ad-841a-ffd06a116961"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Business Workspace",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/BusinessWorkspace"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#\/components\/responses\/AuthenticationException"
+                    },
+                    "403": {
+                        "$ref": "#\/components\/responses\/AuthorizationException"
+                    },
+                    "404": {
+                        "$ref": "#\/components\/responses\/NotFound"
+                    },
+                    "500": {
+                        "$ref": "#\/components\/responses\/UnexpectedException"
+                    }
+                }
+            }
+        },
+        "\/api\/v1\/workspace\/{workspaceId}\/profile": {
+            "put": {
+                "tags": [
+                    "Business",
+                    "Workspace"
+                ],
+                "summary": "Change workspace description",
+                "description": "Changes the current workspace description.\nRequires user to be the owner of the current workspace.",
+                "operationId": "put_ChangeWorkspaceProfile",
+                "parameters": [
+                    {
+                        "name": "workspaceId",
+                        "in": "path",
+                        "description": "Workspace GUID",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "example": "41c8613d-6ae2-41ad-841a-ffd06a116961"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Change workspace profile request",
+                    "content": {
+                        "application\/json": {
+                            "schema": {
+                                "$ref": "#\/components\/schemas\/WorkspaceProfile"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Business Workspace",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/BusinessWorkspace"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#\/components\/responses\/AuthenticationException"
+                    },
+                    "403": {
+                        "$ref": "#\/components\/responses\/AuthorizationException"
+                    },
+                    "422": {
+                        "$ref": "#\/components\/responses\/ValidationError"
+                    },
+                    "500": {
+                        "$ref": "#\/components\/responses\/UnexpectedException"
+                    }
+                }
+            }
+        },
         "\/api\/v1\/customer\/get-token": {
             "post": {
                 "tags": [
@@ -209,7 +387,7 @@
                         "content": {
                             "application\/json": {
                                 "schema": {
-                                    "$ref": "#\/components\/schemas\/Profile"
+                                    "$ref": "#\/components\/schemas\/CustomerProfile"
                                 }
                             }
                         }
@@ -294,6 +472,666 @@
                     },
                     "401": {
                         "$ref": "#\/components\/responses\/AuthenticationException"
+                    },
+                    "404": {
+                        "$ref": "#\/components\/responses\/NotFound"
+                    },
+                    "500": {
+                        "$ref": "#\/components\/responses\/UnexpectedException"
+                    }
+                }
+            }
+        },
+        "\/api\/v1\/workspace\/{workspaceId}\/plan": {
+            "get": {
+                "tags": [
+                    "Business",
+                    "Plan"
+                ],
+                "summary": "Get plans",
+                "description": "Returns all plans in the current workspace.\nRequires user to be authorized to work in the current workspace.",
+                "operationId": "get_ListAllPlan",
+                "parameters": [
+                    {
+                        "name": "workspaceId",
+                        "in": "path",
+                        "description": "Workspace GUID",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "example": "41c8613d-6ae2-41ad-841a-ffd06a116961"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List all plans for the workspace",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#\/components\/schemas\/BusinessPlan"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#\/components\/responses\/AuthenticationException"
+                    },
+                    "403": {
+                        "$ref": "#\/components\/responses\/AuthorizationException"
+                    },
+                    "404": {
+                        "$ref": "#\/components\/responses\/NotFound"
+                    },
+                    "500": {
+                        "$ref": "#\/components\/responses\/UnexpectedException"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Business",
+                    "Plan"
+                ],
+                "summary": "Add a new plan",
+                "description": "Adds a new plan to the current workspace.\nRequires user to be authorized to work in the current workspace.",
+                "operationId": "post_AddPlan",
+                "parameters": [
+                    {
+                        "name": "workspaceId",
+                        "in": "path",
+                        "description": "Workspace GUID",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "example": "41c8613d-6ae2-41ad-841a-ffd06a116961"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Add plan request",
+                    "content": {
+                        "application\/json": {
+                            "schema": {
+                                "$ref": "#\/components\/schemas\/PlanProfile"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Business plan",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/BusinessPlan"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#\/components\/responses\/AuthenticationException"
+                    },
+                    "403": {
+                        "$ref": "#\/components\/responses\/AuthorizationException"
+                    },
+                    "422": {
+                        "$ref": "#\/components\/responses\/ValidationError"
+                    },
+                    "500": {
+                        "$ref": "#\/components\/responses\/UnexpectedException"
+                    }
+                }
+            }
+        },
+        "\/api\/v1\/workspace\/{workspaceId}\/plan\/{planId}": {
+            "get": {
+                "tags": [
+                    "Business",
+                    "Plan"
+                ],
+                "summary": "Get plan",
+                "description": "Returns a plans in the current workspace by id.\nRequires user to be authorized to work in the current workspace.",
+                "operationId": "get_GetPlan",
+                "parameters": [
+                    {
+                        "name": "workspaceId",
+                        "in": "path",
+                        "description": "Workspace GUID",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "example": "41c8613d-6ae2-41ad-841a-ffd06a116961"
+                        }
+                    },
+                    {
+                        "name": "planId",
+                        "in": "path",
+                        "description": "Plan GUID",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "example": "41c8613d-6ae2-41ad-841a-ffd06a116961"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Business plan",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/BusinessPlan"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#\/components\/responses\/AuthenticationException"
+                    },
+                    "403": {
+                        "$ref": "#\/components\/responses\/AuthorizationException"
+                    },
+                    "404": {
+                        "$ref": "#\/components\/responses\/NotFound"
+                    },
+                    "500": {
+                        "$ref": "#\/components\/responses\/UnexpectedException"
+                    }
+                }
+            }
+        },
+        "\/api\/v1\/workspace\/{workspaceId}\/plan\/{planId}\/profile": {
+            "put": {
+                "tags": [
+                    "Business",
+                    "Plan"
+                ],
+                "summary": "Change plan profile",
+                "description": "Changes plan profile.\nRequires user to be authorized to work in the current workspace.",
+                "operationId": "put_ChangePlanProfile",
+                "parameters": [
+                    {
+                        "name": "workspaceId",
+                        "in": "path",
+                        "description": "Workspace GUID",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "example": "41c8613d-6ae2-41ad-841a-ffd06a116961"
+                        }
+                    },
+                    {
+                        "name": "planId",
+                        "in": "path",
+                        "description": "Plan GUID",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "example": "41c8613d-6ae2-41ad-841a-ffd06a116961"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Change plan profile request",
+                    "content": {
+                        "application\/json": {
+                            "schema": {
+                                "$ref": "#\/components\/schemas\/PlanProfile"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Business plan",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/BusinessPlan"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#\/components\/responses\/AuthenticationException"
+                    },
+                    "403": {
+                        "$ref": "#\/components\/responses\/AuthorizationException"
+                    },
+                    "404": {
+                        "$ref": "#\/components\/responses\/NotFound"
+                    },
+                    "422": {
+                        "$ref": "#\/components\/responses\/ValidationError"
+                    },
+                    "500": {
+                        "$ref": "#\/components\/responses\/UnexpectedException"
+                    }
+                }
+            }
+        },
+        "\/api\/v1\/workspace\/{workspaceId}\/plan\/{planId}\/launch": {
+            "put": {
+                "tags": [
+                    "Business",
+                    "Plan"
+                ],
+                "summary": "Launch a plan",
+                "description": "Launches a plan to activity. Requires an expiration date for aut expiration. Can be relaunched with a new date.\nRequires user to be authorized to work in the current workspace.",
+                "operationId": "put_LaunchPlan",
+                "parameters": [
+                    {
+                        "name": "workspaceId",
+                        "in": "path",
+                        "description": "Workspace GUID",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "example": "41c8613d-6ae2-41ad-841a-ffd06a116961"
+                        }
+                    },
+                    {
+                        "name": "planId",
+                        "in": "path",
+                        "description": "Plan GUID",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "example": "41c8613d-6ae2-41ad-841a-ffd06a116961"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Launch plan request",
+                    "content": {
+                        "application\/json": {
+                            "schema": {
+                                "$ref": "#\/components\/schemas\/PlanExpiration"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Business plan",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/BusinessPlan"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#\/components\/responses\/DomainException"
+                    },
+                    "401": {
+                        "$ref": "#\/components\/responses\/AuthenticationException"
+                    },
+                    "403": {
+                        "$ref": "#\/components\/responses\/AuthorizationException"
+                    },
+                    "404": {
+                        "$ref": "#\/components\/responses\/NotFound"
+                    },
+                    "422": {
+                        "$ref": "#\/components\/responses\/ValidationError"
+                    },
+                    "500": {
+                        "$ref": "#\/components\/responses\/UnexpectedException"
+                    }
+                }
+            }
+        },
+        "\/api\/v1\/workspace\/{workspaceId}\/plan\/{planId}\/stop": {
+            "put": {
+                "tags": [
+                    "Business",
+                    "Plan"
+                ],
+                "summary": "Stop a plan",
+                "description": "Stops a plan from active state.\nRequires user to be authorized to work in the current workspace.",
+                "operationId": "put_StopPlan",
+                "parameters": [
+                    {
+                        "name": "workspaceId",
+                        "in": "path",
+                        "description": "Workspace GUID",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "example": "41c8613d-6ae2-41ad-841a-ffd06a116961"
+                        }
+                    },
+                    {
+                        "name": "planId",
+                        "in": "path",
+                        "description": "Plan GUID",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "example": "41c8613d-6ae2-41ad-841a-ffd06a116961"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Business plan",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/BusinessPlan"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#\/components\/responses\/AuthenticationException"
+                    },
+                    "403": {
+                        "$ref": "#\/components\/responses\/AuthorizationException"
+                    },
+                    "404": {
+                        "$ref": "#\/components\/responses\/NotFound"
+                    },
+                    "500": {
+                        "$ref": "#\/components\/responses\/UnexpectedException"
+                    }
+                }
+            }
+        },
+        "\/api\/v1\/workspace\/{workspaceId}\/plan\/{planId}\/archive": {
+            "put": {
+                "tags": [
+                    "Business",
+                    "Plan"
+                ],
+                "summary": "Archive a plan",
+                "description": "Archives plan. Archived plans are invisible by normal means. Plans are archived automatically on their expiration date.\nRequires user to be authorized to work in the current workspace.",
+                "operationId": "put_ArchivePlan",
+                "parameters": [
+                    {
+                        "name": "workspaceId",
+                        "in": "path",
+                        "description": "Workspace GUID",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "example": "41c8613d-6ae2-41ad-841a-ffd06a116961"
+                        }
+                    },
+                    {
+                        "name": "planId",
+                        "in": "path",
+                        "description": "Plan GUID",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "example": "41c8613d-6ae2-41ad-841a-ffd06a116961"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Business plan",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/BusinessPlan"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#\/components\/responses\/AuthenticationException"
+                    },
+                    "403": {
+                        "$ref": "#\/components\/responses\/AuthorizationException"
+                    },
+                    "404": {
+                        "$ref": "#\/components\/responses\/NotFound"
+                    },
+                    "500": {
+                        "$ref": "#\/components\/responses\/UnexpectedException"
+                    }
+                }
+            }
+        },
+        "\/api\/v1\/workspace\/{workspaceId}\/plan\/{planId}\/requirement": {
+            "post": {
+                "tags": [
+                    "Business",
+                    "Plan"
+                ],
+                "summary": "Add plan requirement",
+                "description": "Adds a new requirement to the plan. Requirement changes are propagated to the relevant cards.\nRequires user to be authorized to work in the current workspace.",
+                "operationId": "post_AddPlanRequirement",
+                "parameters": [
+                    {
+                        "name": "workspaceId",
+                        "in": "path",
+                        "description": "Workspace GUID",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "example": "41c8613d-6ae2-41ad-841a-ffd06a116961"
+                        }
+                    },
+                    {
+                        "name": "planId",
+                        "in": "path",
+                        "description": "Plan GUID",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "example": "41c8613d-6ae2-41ad-841a-ffd06a116961"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Add requirement request",
+                    "content": {
+                        "application\/json": {
+                            "schema": {
+                                "$ref": "#\/components\/schemas\/RequirementProfile"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Business plan",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/BusinessPlan"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#\/components\/responses\/DomainException"
+                    },
+                    "401": {
+                        "$ref": "#\/components\/responses\/AuthenticationException"
+                    },
+                    "403": {
+                        "$ref": "#\/components\/responses\/AuthorizationException"
+                    },
+                    "404": {
+                        "$ref": "#\/components\/responses\/NotFound"
+                    },
+                    "422": {
+                        "$ref": "#\/components\/responses\/ValidationError"
+                    },
+                    "500": {
+                        "$ref": "#\/components\/responses\/UnexpectedException"
+                    }
+                }
+            }
+        },
+        "\/api\/v1\/workspace\/{workspaceId}\/plan\/{planId}\/requirement\/{requirementId}": {
+            "put": {
+                "tags": [
+                    "Business",
+                    "Plan"
+                ],
+                "summary": "Change plan requirement description",
+                "description": "Changes the requirement description. Description changes are propagated to the relevant cards.\nRequires user to be authorized to work in the current workspace.",
+                "operationId": "put_ChangePlanRequirement",
+                "parameters": [
+                    {
+                        "name": "workspaceId",
+                        "in": "path",
+                        "description": "Workspace GUID",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "example": "41c8613d-6ae2-41ad-841a-ffd06a116961"
+                        }
+                    },
+                    {
+                        "name": "planId",
+                        "in": "path",
+                        "description": "Plan GUID",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "example": "41c8613d-6ae2-41ad-841a-ffd06a116961"
+                        }
+                    },
+                    {
+                        "name": "requirementId",
+                        "in": "path",
+                        "description": "Requirement GUID",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "example": "41c8613d-6ae2-41ad-841a-ffd06a116961"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Change requirement description request",
+                    "content": {
+                        "application\/json": {
+                            "schema": {
+                                "$ref": "#\/components\/schemas\/RequirementProfile"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Business plan",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/BusinessPlan"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#\/components\/responses\/DomainException"
+                    },
+                    "401": {
+                        "$ref": "#\/components\/responses\/AuthenticationException"
+                    },
+                    "403": {
+                        "$ref": "#\/components\/responses\/AuthorizationException"
+                    },
+                    "404": {
+                        "$ref": "#\/components\/responses\/NotFound"
+                    },
+                    "422": {
+                        "$ref": "#\/components\/responses\/ValidationError"
+                    },
+                    "500": {
+                        "$ref": "#\/components\/responses\/UnexpectedException"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Business",
+                    "Plan"
+                ],
+                "summary": "Remove plan requirement",
+                "description": "Removes the requirement from the plan. Requirement changes are propagated to the relevant cards.\nRequires user to be authorized to work in the current workspace.",
+                "operationId": "delete_RemovePlanRequirement",
+                "parameters": [
+                    {
+                        "name": "workspaceId",
+                        "in": "path",
+                        "description": "Workspace GUID",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "example": "41c8613d-6ae2-41ad-841a-ffd06a116961"
+                        }
+                    },
+                    {
+                        "name": "planId",
+                        "in": "path",
+                        "description": "Plan GUID",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "example": "41c8613d-6ae2-41ad-841a-ffd06a116961"
+                        }
+                    },
+                    {
+                        "name": "requirementId",
+                        "in": "path",
+                        "description": "Requirement GUID",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "example": "41c8613d-6ae2-41ad-841a-ffd06a116961"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Business plan",
+                        "content": {
+                            "application\/json": {
+                                "schema": {
+                                    "$ref": "#\/components\/schemas\/BusinessPlan"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#\/components\/responses\/AuthenticationException"
+                    },
+                    "403": {
+                        "$ref": "#\/components\/responses\/AuthorizationException"
                     },
                     "404": {
                         "$ref": "#\/components\/responses\/NotFound"
@@ -1109,642 +1947,85 @@
                     }
                 }
             }
-        },
-        "\/api\/v1\/workspace\/{workspaceId}\/plan": {
-            "get": {
-                "tags": [
-                    "Business",
-                    "Plan"
-                ],
-                "operationId": "get_ListAllPlan",
-                "parameters": [
-                    {
-                        "name": "workspaceId",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Returns all plans in the current workspace. Requires user to be authorized to work in the current workspace.",
-                        "content": {
-                            "application\/json": {
-                                "schema": {
-                                    "description": "List all plans for the workspace",
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#\/components\/schemas\/BusinessPlan"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "post": {
-                "tags": [
-                    "Business",
-                    "Plan"
-                ],
-                "summary": "Add a new plan",
-                "description": "Adds a new plan to the current workspace.\nRequires user to be authorized to work in the current workspace.",
-                "operationId": "post_AddPlan",
-                "parameters": [
-                    {
-                        "name": "workspaceId",
-                        "in": "path",
-                        "description": "Workspace GUID",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "format": "uuid",
-                            "example": "41c8613d-6ae2-41ad-841a-ffd06a116961"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "description": "Add plan request",
-                    "content": {
-                        "application\/json": {
-                            "schema": {
-                                "$ref": "#\/components\/schemas\/PlanProfile"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Business plan",
-                        "content": {
-                            "application\/json": {
-                                "schema": {
-                                    "$ref": "#\/components\/schemas\/BusinessPlan"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "$ref": "#\/components\/responses\/AuthenticationException"
-                    },
-                    "403": {
-                        "$ref": "#\/components\/responses\/AuthorizationException"
-                    },
-                    "422": {
-                        "$ref": "#\/components\/responses\/ValidationError"
-                    },
-                    "500": {
-                        "$ref": "#\/components\/responses\/UnexpectedException"
-                    }
-                }
-            }
-        },
-        "\/api\/v1\/workspace\/{workspaceId}\/plan\/{planId}\/archive": {
-            "put": {
-                "tags": [
-                    "Business",
-                    "Plan"
-                ],
-                "summary": "Archive a plan",
-                "description": "Archives plan. Archived plans are invisible by normal means. Plans are archived automatically on their expiration date.\nRequires user to be authorized to work in the current workspace.",
-                "operationId": "put_ArchivePlan",
-                "parameters": [
-                    {
-                        "name": "workspaceId",
-                        "in": "path",
-                        "description": "Workspace GUID",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "format": "uuid",
-                            "example": "41c8613d-6ae2-41ad-841a-ffd06a116961"
-                        }
-                    },
-                    {
-                        "name": "planId",
-                        "in": "path",
-                        "description": "Plan GUID",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "format": "uuid",
-                            "example": "41c8613d-6ae2-41ad-841a-ffd06a116961"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Business plan",
-                        "content": {
-                            "application\/json": {
-                                "schema": {
-                                    "$ref": "#\/components\/schemas\/BusinessPlan"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "$ref": "#\/components\/responses\/AuthenticationException"
-                    },
-                    "403": {
-                        "$ref": "#\/components\/responses\/AuthorizationException"
-                    },
-                    "404": {
-                        "$ref": "#\/components\/responses\/NotFound"
-                    },
-                    "500": {
-                        "$ref": "#\/components\/responses\/UnexpectedException"
-                    }
-                }
-            }
-        },
-        "\/api\/v1\/workspace\/{workspaceId}\/plan\/{planId}\/profile": {
-            "put": {
-                "tags": [
-                    "Business",
-                    "Plan"
-                ],
-                "summary": "Change plan profile",
-                "description": "Changes plan profile.\nRequires user to be authorized to work in the current workspace.",
-                "operationId": "put_ChangePlanProfile",
-                "parameters": [
-                    {
-                        "name": "workspaceId",
-                        "in": "path",
-                        "description": "Workspace GUID",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "format": "uuid",
-                            "example": "41c8613d-6ae2-41ad-841a-ffd06a116961"
-                        }
-                    },
-                    {
-                        "name": "planId",
-                        "in": "path",
-                        "description": "Plan GUID",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "format": "uuid",
-                            "example": "41c8613d-6ae2-41ad-841a-ffd06a116961"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "description": "Change plan profile request",
-                    "content": {
-                        "application\/json": {
-                            "schema": {
-                                "$ref": "#\/components\/schemas\/PlanProfile"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Business plan",
-                        "content": {
-                            "application\/json": {
-                                "schema": {
-                                    "$ref": "#\/components\/schemas\/BusinessPlan"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "$ref": "#\/components\/responses\/AuthenticationException"
-                    },
-                    "403": {
-                        "$ref": "#\/components\/responses\/AuthorizationException"
-                    },
-                    "404": {
-                        "$ref": "#\/components\/responses\/NotFound"
-                    },
-                    "422": {
-                        "$ref": "#\/components\/responses\/ValidationError"
-                    },
-                    "500": {
-                        "$ref": "#\/components\/responses\/UnexpectedException"
-                    }
-                }
-            }
-        },
-        "\/api\/v1\/workspace\/{workspaceId}\/plan\/{planId}\/launch": {
-            "put": {
-                "tags": [
-                    "Business",
-                    "Plan"
-                ],
-                "summary": "Launch a plan",
-                "description": "Launches a plan to activity. Requires an expiration date for aut expiration. Can be relaunched with a new date.\nRequires user to be authorized to work in the current workspace.",
-                "operationId": "put_LaunchPlan",
-                "parameters": [
-                    {
-                        "name": "workspaceId",
-                        "in": "path",
-                        "description": "Workspace GUID",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "format": "uuid",
-                            "example": "41c8613d-6ae2-41ad-841a-ffd06a116961"
-                        }
-                    },
-                    {
-                        "name": "planId",
-                        "in": "path",
-                        "description": "Plan GUID",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "format": "uuid",
-                            "example": "41c8613d-6ae2-41ad-841a-ffd06a116961"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "description": "Launch plan request",
-                    "content": {
-                        "application\/json": {
-                            "schema": {
-                                "$ref": "#\/components\/schemas\/PlanExpiration"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Business plan",
-                        "content": {
-                            "application\/json": {
-                                "schema": {
-                                    "$ref": "#\/components\/schemas\/BusinessPlan"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "$ref": "#\/components\/responses\/DomainException"
-                    },
-                    "401": {
-                        "$ref": "#\/components\/responses\/AuthenticationException"
-                    },
-                    "403": {
-                        "$ref": "#\/components\/responses\/AuthorizationException"
-                    },
-                    "404": {
-                        "$ref": "#\/components\/responses\/NotFound"
-                    },
-                    "422": {
-                        "$ref": "#\/components\/responses\/ValidationError"
-                    },
-                    "500": {
-                        "$ref": "#\/components\/responses\/UnexpectedException"
-                    }
-                }
-            }
-        },
-        "\/api\/v1\/workspace\/{workspaceId}\/plan\/{planId}\/stop": {
-            "put": {
-                "tags": [
-                    "Business",
-                    "Plan"
-                ],
-                "summary": "Stop a plan",
-                "description": "Stops a plan from active state.\nRequires user to be authorized to work in the current workspace.",
-                "operationId": "put_StopPlan",
-                "parameters": [
-                    {
-                        "name": "workspaceId",
-                        "in": "path",
-                        "description": "Workspace GUID",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "format": "uuid",
-                            "example": "41c8613d-6ae2-41ad-841a-ffd06a116961"
-                        }
-                    },
-                    {
-                        "name": "planId",
-                        "in": "path",
-                        "description": "Plan GUID",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "format": "uuid",
-                            "example": "41c8613d-6ae2-41ad-841a-ffd06a116961"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Business plan",
-                        "content": {
-                            "application\/json": {
-                                "schema": {
-                                    "$ref": "#\/components\/schemas\/BusinessPlan"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "$ref": "#\/components\/responses\/AuthenticationException"
-                    },
-                    "403": {
-                        "$ref": "#\/components\/responses\/AuthorizationException"
-                    },
-                    "404": {
-                        "$ref": "#\/components\/responses\/NotFound"
-                    },
-                    "500": {
-                        "$ref": "#\/components\/responses\/UnexpectedException"
-                    }
-                }
-            }
-        },
-        "\/api\/v1\/workspace\/{workspaceId}\/plan\/{planId}": {
-            "get": {
-                "tags": [
-                    "Business",
-                    "Plan"
-                ],
-                "operationId": "get_GetPlan",
-                "parameters": [
-                    {
-                        "name": "workspaceId",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "planId",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Returns a plans in the current workspace by id. Requires user to be authorized to work in the current workspace.",
-                        "content": {
-                            "application\/json": {
-                                "schema": {
-                                    "$ref": "#\/components\/schemas\/BusinessPlan"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "\/api\/v1\/workspace\/{workspaceId}\/plan\/{planId}\/requirement": {
-            "post": {
-                "tags": [
-                    "Business",
-                    "Plan"
-                ],
-                "operationId": "post_AddPlanRequirement",
-                "parameters": [
-                    {
-                        "name": "workspaceId",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "planId",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Adds a new requirement to the plan. Requirement changes are propagated to the relevant cards. Requires user to be authorized to work in the current workspace.",
-                        "content": {
-                            "application\/json": {
-                                "schema": {
-                                    "$ref": "#\/components\/schemas\/BusinessPlan"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "\/api\/v1\/workspace\/{workspaceId}\/plan\/{planId}\/requirement\/{requirementId}": {
-            "put": {
-                "tags": [
-                    "Business",
-                    "Plan"
-                ],
-                "operationId": "put_ChangePlanRequirement",
-                "parameters": [
-                    {
-                        "name": "workspaceId",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "planId",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "requirementId",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Changes the requirement description. Description changes are propagated to the relevant cards. Requires user to be authorized to work in the current workspace.",
-                        "content": {
-                            "application\/json": {
-                                "schema": {
-                                    "$ref": "#\/components\/schemas\/BusinessPlan"
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "tags": [
-                    "Business",
-                    "Plan"
-                ],
-                "operationId": "delete_RemovePlanRequirement",
-                "parameters": [
-                    {
-                        "name": "workspaceId",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "planId",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "requirementId",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Removes the requirement from the plan. Requirement changes are propagated to the relevant cards. Requires user to be authorized to work in the current workspace.",
-                        "content": {
-                            "application\/json": {
-                                "schema": {
-                                    "$ref": "#\/components\/schemas\/BusinessPlan"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "\/api\/v1\/workspace": {
-            "get": {
-                "tags": [
-                    "Business",
-                    "Workspace"
-                ],
-                "operationId": "get_ListAllWorkspace",
-                "responses": {
-                    "200": {
-                        "description": "Returns all workspaces where the current user is a collaborator.",
-                        "content": {
-                            "application\/json": {
-                                "schema": {
-                                    "description": "List all workspaces of the current collaborator",
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#\/components\/schemas\/BusinessWorkspace"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "post": {
-                "tags": [
-                    "Business",
-                    "Workspace"
-                ],
-                "operationId": "post_AddWorkspace",
-                "responses": {
-                    "200": {
-                        "description": "Returns the newly created workspace where the current user is an owner.",
-                        "content": {
-                            "application\/json": {
-                                "schema": {
-                                    "$ref": "#\/components\/schemas\/BusinessWorkspace"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "\/api\/v1\/workspace\/{workspaceId}\/profile": {
-            "put": {
-                "tags": [
-                    "Business",
-                    "Workspace"
-                ],
-                "operationId": "put_ChangeWorkspaceProfile",
-                "parameters": [
-                    {
-                        "name": "workspaceId",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Changes the current workspace description. Requires user to be the owner of the current workspace..",
-                        "content": {
-                            "application\/json": {
-                                "schema": {
-                                    "$ref": "#\/components\/schemas\/BusinessWorkspace"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "\/api\/v1\/workspace\/{workspaceId}": {
-            "get": {
-                "tags": [
-                    "Business",
-                    "Workspace"
-                ],
-                "operationId": "get_GetWorkspace",
-                "parameters": [
-                    {
-                        "name": "workspaceId",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Returns workspace where the current user is a collaborator. Requires user to be authorized to work in this workspace.",
-                        "content": {
-                            "application\/json": {
-                                "schema": {
-                                    "$ref": "#\/components\/schemas\/BusinessWorkspace"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
         }
     },
     "components": {
         "schemas": {
+            "BusinessWorkspace": {
+                "title": "BusinessWorkspace",
+                "description": "Business workspace",
+                "required": [
+                    "workspaceId",
+                    "keeperId",
+                    "name",
+                    "description",
+                    "address"
+                ],
+                "properties": {
+                    "workspaceId": {
+                        "description": "Workspace Id",
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "41c8613d-6ae2-41ad-841a-ffd06a116961",
+                        "nullable": false
+                    },
+                    "keeperId": {
+                        "description": "Keeper Id",
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "41c8613d-6ae2-41ad-841a-ffd06a116961",
+                        "nullable": false
+                    },
+                    "name": {
+                        "description": "Workspace (business) name",
+                        "type": "string",
+                        "example": "Coffee shop",
+                        "nullable": false
+                    },
+                    "description": {
+                        "description": "Workspace (business) description",
+                        "type": "string",
+                        "example": "The best coffee shop out there",
+                        "nullable": false
+                    },
+                    "address": {
+                        "description": "Workspace (business) address",
+                        "type": "string",
+                        "example": "Mapping street 17, Longitude county, Liberland",
+                        "nullable": false
+                    }
+                },
+                "type": "object"
+            },
+            "WorkspaceProfile": {
+                "description": "Workspace profile request",
+                "required": [
+                    "name",
+                    "description",
+                    "address"
+                ],
+                "properties": {
+                    "name": {
+                        "description": "Workspace (business) title",
+                        "type": "string",
+                        "example": "Tillman-Schaefer",
+                        "nullable": false
+                    },
+                    "description": {
+                        "description": "Workspace (business) description",
+                        "type": "string",
+                        "example": "Qui et qui quia modi. Ut alias recusandae omnis amet mollitia. Ea eos consequatur minima consequuntur qui. Temporibus et unde sunt aut eum quia.",
+                        "nullable": false
+                    },
+                    "address": {
+                        "description": "Workspace (business) address",
+                        "type": "string",
+                        "example": "7171 Ted Flats Suite 993\\nLake Uriel, PA 41355-3662",
+                        "nullable": false
+                    }
+                },
+                "type": "object"
+            },
             "GetCustomerAccessToken": {
                 "description": "New API access token for the specific device request",
                 "required": [
@@ -1848,8 +2129,8 @@
                 },
                 "type": "object"
             },
-            "Profile": {
-                "title": "Profile",
+            "CustomerProfile": {
+                "title": "CustomerProfile",
                 "description": "Customer Profile",
                 "required": [
                     "profileId",
@@ -1996,6 +2277,154 @@
                             },
                             "type": "object"
                         },
+                        "nullable": false
+                    }
+                },
+                "type": "object"
+            },
+            "BusinessPlan": {
+                "title": "BusinessPlan",
+                "description": "Business plan",
+                "required": [
+                    "planId",
+                    "workspaceId",
+                    "name",
+                    "description",
+                    "isLaunched",
+                    "isStopped",
+                    "isArchived",
+                    "expirationDate",
+                    "requirements"
+                ],
+                "properties": {
+                    "planId": {
+                        "description": "Plan Id",
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "41c8613d-6ae2-41ad-841a-ffd06a116961",
+                        "nullable": false
+                    },
+                    "workspaceId": {
+                        "description": "Workspace Id",
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "41c8613d-6ae2-41ad-841a-ffd06a116961",
+                        "nullable": false
+                    },
+                    "name": {
+                        "description": "Plan name",
+                        "type": "string",
+                        "example": "Americano 1\/8",
+                        "nullable": false
+                    },
+                    "description": {
+                        "description": "Plan description",
+                        "type": "string",
+                        "example": "Get a free americano for 8 cups of cappuccino",
+                        "nullable": false
+                    },
+                    "isLaunched": {
+                        "description": "Whether the plan has been launched",
+                        "type": "boolean",
+                        "example": true,
+                        "nullable": false
+                    },
+                    "isStopped": {
+                        "description": "Whether the plan has been stopped",
+                        "type": "boolean",
+                        "example": false,
+                        "nullable": false
+                    },
+                    "isArchived": {
+                        "description": "Whether the plan has been archived",
+                        "type": "boolean",
+                        "example": false,
+                        "nullable": false
+                    },
+                    "expirationDate": {
+                        "description": "Plan expiration date",
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "requirements": {
+                        "description": "Plan requirements",
+                        "type": "array",
+                        "items": {
+                            "required": [
+                                "requirementId",
+                                "description"
+                            ],
+                            "properties": {
+                                "requirementId": {
+                                    "description": "Requirement id",
+                                    "type": "string",
+                                    "format": "uuid",
+                                    "example": "41c8613d-6ae2-41ad-841a-ffd06a116961",
+                                    "nullable": false
+                                },
+                                "description": {
+                                    "description": "Requirement description",
+                                    "type": "string",
+                                    "example": "Buy a cup of lungo",
+                                    "nullable": false
+                                }
+                            },
+                            "type": "object"
+                        },
+                        "nullable": false
+                    }
+                },
+                "type": "object"
+            },
+            "PlanProfile": {
+                "description": "Plan profile request",
+                "required": [
+                    "name",
+                    "description"
+                ],
+                "properties": {
+                    "name": {
+                        "description": "Plan name",
+                        "type": "string",
+                        "example": "Mollitia id eos debitis qui aut.",
+                        "nullable": false
+                    },
+                    "description": {
+                        "description": "Plan description",
+                        "type": "string",
+                        "example": "Nobis qui quam dolore accusamus neque laborum ut doloremque. Cupiditate molestiae qui culpa et sint aut. Ut eveniet delectus et. Debitis quos hic qui rerum.",
+                        "nullable": false
+                    }
+                },
+                "type": "object"
+            },
+            "PlanExpiration": {
+                "description": "Plan expiration request",
+                "required": [
+                    "expirationDate"
+                ],
+                "properties": {
+                    "expirationDate": {
+                        "description": "Plan expiration date",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2070-01-01T00:00:00.000Z",
+                        "nullable": false
+                    }
+                },
+                "type": "object"
+            },
+            "RequirementProfile": {
+                "description": "Requirement profile request",
+                "required": [
+                    "description"
+                ],
+                "properties": {
+                    "description": {
+                        "description": "Requirement description",
+                        "type": "string",
+                        "example": "Id quae excepturi sit vero velit est. Sapiente culpa ut assumenda non itaque officia. Reiciendis ducimus modi quaerat eius amet. Vero qui similique minima a nulla illum.",
                         "nullable": false
                     }
                 },
@@ -2159,183 +2588,6 @@
                         "description": "Achievement (requirement) description",
                         "type": "string",
                         "example": "Deserunt deleniti aut autem dolores tempore. Maxime cupiditate modi delectus. Sapiente a perferendis voluptatibus voluptates molestiae. Quibusdam totam molestiae ea repellendus dolorem.",
-                        "nullable": false
-                    }
-                },
-                "type": "object"
-            },
-            "BusinessPlan": {
-                "title": "BusinessPlan",
-                "description": "Business plan",
-                "required": [
-                    "planId",
-                    "workspaceId",
-                    "name",
-                    "description",
-                    "isLaunched",
-                    "isStopped",
-                    "isArchived",
-                    "expirationDate",
-                    "requirements"
-                ],
-                "properties": {
-                    "planId": {
-                        "description": "Plan Id",
-                        "type": "string",
-                        "format": "uuid",
-                        "example": "41c8613d-6ae2-41ad-841a-ffd06a116961",
-                        "nullable": false
-                    },
-                    "workspaceId": {
-                        "description": "Workspace Id",
-                        "type": "string",
-                        "format": "uuid",
-                        "example": "41c8613d-6ae2-41ad-841a-ffd06a116961",
-                        "nullable": false
-                    },
-                    "name": {
-                        "description": "Plan name",
-                        "type": "string",
-                        "example": "Americano 1\/8",
-                        "nullable": false
-                    },
-                    "description": {
-                        "description": "Plan description",
-                        "type": "string",
-                        "example": "Get a free americano for 8 cups of cappuccino",
-                        "nullable": false
-                    },
-                    "isLaunched": {
-                        "description": "Whether the plan has been launched",
-                        "type": "boolean",
-                        "example": true,
-                        "nullable": false
-                    },
-                    "isStopped": {
-                        "description": "Whether the plan has been stopped",
-                        "type": "boolean",
-                        "example": false,
-                        "nullable": false
-                    },
-                    "isArchived": {
-                        "description": "Whether the plan has been archived",
-                        "type": "boolean",
-                        "example": false,
-                        "nullable": false
-                    },
-                    "expirationDate": {
-                        "description": "Plan expiration date",
-                        "type": "string",
-                        "format": "date-time",
-                        "nullable": true
-                    },
-                    "requirements": {
-                        "description": "Plan requirements",
-                        "type": "array",
-                        "items": {
-                            "required": [
-                                "requirementId",
-                                "description"
-                            ],
-                            "properties": {
-                                "requirementId": {
-                                    "description": "Requirement id",
-                                    "type": "string",
-                                    "format": "uuid",
-                                    "example": "41c8613d-6ae2-41ad-841a-ffd06a116961",
-                                    "nullable": false
-                                },
-                                "description": {
-                                    "description": "Requirement description",
-                                    "type": "string",
-                                    "example": "Buy a cup of lungo",
-                                    "nullable": false
-                                }
-                            },
-                            "type": "object"
-                        },
-                        "nullable": false
-                    }
-                },
-                "type": "object"
-            },
-            "PlanProfile": {
-                "description": "Plan profile request",
-                "required": [
-                    "name",
-                    "description"
-                ],
-                "properties": {
-                    "name": {
-                        "description": "Plan name",
-                        "type": "string",
-                        "example": "Mollitia id eos debitis qui aut.",
-                        "nullable": false
-                    },
-                    "description": {
-                        "description": "Plan description",
-                        "type": "string",
-                        "example": "Nobis qui quam dolore accusamus neque laborum ut doloremque. Cupiditate molestiae qui culpa et sint aut. Ut eveniet delectus et. Debitis quos hic qui rerum.",
-                        "nullable": false
-                    }
-                },
-                "type": "object"
-            },
-            "PlanExpiration": {
-                "description": "Plan expiration request",
-                "required": [
-                    "expirationDate"
-                ],
-                "properties": {
-                    "expirationDate": {
-                        "description": "Plan expiration date",
-                        "type": "string",
-                        "format": "date-time",
-                        "example": "2070-01-01T00:00:00.000Z",
-                        "nullable": false
-                    }
-                },
-                "type": "object"
-            },
-            "BusinessWorkspace": {
-                "title": "BusinessWorkspace",
-                "description": "Business workspace",
-                "required": [
-                    "workspaceId",
-                    "keeperId",
-                    "name",
-                    "description",
-                    "address"
-                ],
-                "properties": {
-                    "workspaceId": {
-                        "description": "Workspace Id",
-                        "type": "string",
-                        "format": "uuid",
-                        "nullable": false
-                    },
-                    "keeperId": {
-                        "description": "Keeper Id",
-                        "type": "string",
-                        "format": "uuid",
-                        "nullable": false
-                    },
-                    "name": {
-                        "description": "Workspace (business) name",
-                        "type": "string",
-                        "example": "Coffee shop",
-                        "nullable": false
-                    },
-                    "description": {
-                        "description": "Workspace (business) description",
-                        "type": "string",
-                        "example": "The best coffee shop out there",
-                        "nullable": false
-                    },
-                    "address": {
-                        "description": "Workspace (business) address",
-                        "type": "string",
-                        "example": "Mapping street 17, Longitude county, Liberland",
                         "nullable": false
                     }
                 },

@@ -24,10 +24,10 @@ class BusinessWorkspace implements JsonSerializable
     use ArrayPresenterTrait;
 
     public function __construct(
-        #[Property(description: "Workspace Id", format: "uuid", nullable: false)]
+        #[Property(description: "Workspace Id", format: "uuid", example: '41c8613d-6ae2-41ad-841a-ffd06a116961', nullable: false)]
         public string $workspaceId,
 
-        #[Property(description: "Keeper Id", format: "uuid", nullable: false)]
+        #[Property(description: "Keeper Id", format: "uuid", example: '41c8613d-6ae2-41ad-841a-ffd06a116961', nullable: false)]
         public string $keeperId,
 
         #[Property(description: "Workspace (business) name", example: "Coffee shop", nullable: false)]

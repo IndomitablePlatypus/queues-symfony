@@ -30,10 +30,10 @@ class BusinessPlan implements JsonSerializable
     use ArrayPresenterTrait;
 
     public function __construct(
-        #[Property(description: "Plan Id", format: "uuid", nullable: false)]
+        #[Property(description: "Plan Id", format: "uuid", example: '41c8613d-6ae2-41ad-841a-ffd06a116961', nullable: false)]
         public string $planId,
 
-        #[Property(description: "Workspace Id", format: "uuid", nullable: false)]
+        #[Property(description: "Workspace Id", format: "uuid", example: '41c8613d-6ae2-41ad-841a-ffd06a116961', nullable: false)]
         public string $workspaceId,
 
         #[Property(description: "Plan name", example: "Americano 1/8", nullable: false)]
@@ -60,7 +60,7 @@ class BusinessPlan implements JsonSerializable
             items: new Items(
                 required: ["requirementId", "description"],
                 properties: [
-                    new Property(property: "requirementId", description: "Requirement id", type: "string", format: "uuid", nullable: false),
+                    new Property(property: "requirementId", description: "Requirement id", type: "string", format: "uuid", example: '41c8613d-6ae2-41ad-841a-ffd06a116961', nullable: false),
                     new Property(property: "description", description: "Requirement description", type: "string", example: "Buy a cup of lungo", nullable: false),
                 ],
                 type: "object",

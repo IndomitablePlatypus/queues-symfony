@@ -60,7 +60,7 @@ class IssuedCard implements JsonSerializable
             items: new Items(
                 required: ["achievementId", "description"],
                 properties: [
-                    new Property(property: "achievementId", description: "Achievement Id = corresponding requirement id", type: "string", format: "uuid", nullable: false),
+                    new Property(property: "achievementId", description: "Achievement Id = corresponding requirement id", type: "string", format: "uuid", example: '41c8613d-6ae2-41ad-841a-ffd06a116961', nullable: false),
                     new Property(property: "description", description: "Requirement description", type: "string", example: "Buy a cup of lungo", nullable: false),
                 ],
                 type: "object",
@@ -75,7 +75,7 @@ class IssuedCard implements JsonSerializable
             items: new Items(
                 required: ["requirementId", "description"],
                 properties: [
-                    new Property(property: "requirementId", description: "Requirement id", type: "string", format: "uuid", nullable: false),
+                    new Property(property: "requirementId", description: "Requirement id", type: "string", format: "uuid", example: '41c8613d-6ae2-41ad-841a-ffd06a116961', nullable: false),
                     new Property(property: "description", description: "Requirement description", type: "string", example: "Buy a cup of lungo", nullable: false),
                 ],
                 type: "object",

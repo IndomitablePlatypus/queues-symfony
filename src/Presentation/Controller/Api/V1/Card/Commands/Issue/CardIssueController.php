@@ -25,8 +25,8 @@ class CardIssueController extends ApiController
      * Issues card for a plan to a customer.
      * Requires user to be authorized to work in the current workspace.
      */
-    #[OA\PathParameter(name: 'workspaceId', description: 'Workspace GUID', schema: new OA\Schema(type: 'string', format: 'uuid', example: '41c8613d-6ae2-41ad-841a-ffd06a116961'),)]
-    #[OA\RequestBody(content: new OA\JsonContent(ref: new Model(type: NewCard::class)))]
+    #[OA\PathParameter(name: 'workspaceId', description: 'Workspace GUID', schema: new OA\Schema(type: 'string', format: 'uuid', example: '41c8613d-6ae2-41ad-841a-ffd06a116961'))]
+    #[OA\RequestBody(description: 'Issue card request', content: new OA\JsonContent(ref: new Model(type: NewCard::class)))]
     #[OA\Response(response: 200, description: 'Business card', content: new OA\JsonContent(ref: new Model(type: BusinessCard::class)))]
     #[OA\Response(ref: "#/components/responses/DomainException", response: 400)]
     #[OA\Response(ref: "#/components/responses/AuthenticationException", response: 401)]

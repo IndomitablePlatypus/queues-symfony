@@ -11,7 +11,7 @@ use OpenApi\Attributes\Property;
 use OpenApi\Attributes\Schema;
 
 #[Schema(
-    title: "Profile",
+    title: "CustomerProfile",
     description: "Customer Profile",
     required: [
         "profileId",
@@ -19,7 +19,7 @@ use OpenApi\Attributes\Schema;
         "phone",
     ],
 )]
-class Profile implements JsonSerializable
+class CustomerProfile implements JsonSerializable
 {
     use ArrayPresenterTrait;
 

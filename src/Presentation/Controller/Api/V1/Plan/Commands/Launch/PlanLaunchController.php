@@ -35,7 +35,7 @@ class PlanLaunchController extends ApiController
     #[OA\Response(ref: "#/components/responses/NotFound", response: 404)]
     #[OA\Response(ref: "#/components/responses/ValidationError", response: 422)]
     #[OA\Response(ref: "#/components/responses/UnexpectedException", response: 500)]
-    #[Route('/{planId}/launch', name: RouteName::LAUNCH_PLAN, methods: ['PUT'])]
+    #[Route('/{planId}/launch', name: RouteName::LAUNCH_PLAN, methods: ['PUT'], priority: 530)]
     public function changeProfile(
         LaunchPlanRequest $request,
         PlanService $planService,

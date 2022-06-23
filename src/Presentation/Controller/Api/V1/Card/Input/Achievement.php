@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Presentation\Controller\Api\V1\Card\Achievement\Commands\Note\Input;
+namespace App\Presentation\Controller\Api\V1\Card\Input;
 
 use OpenApi\Attributes as OA;
 

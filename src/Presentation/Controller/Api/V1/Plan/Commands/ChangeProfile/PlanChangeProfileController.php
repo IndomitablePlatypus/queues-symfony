@@ -34,7 +34,7 @@ class PlanChangeProfileController extends ApiController
     #[OA\Response(ref: "#/components/responses/NotFound", response: 404)]
     #[OA\Response(ref: "#/components/responses/ValidationError", response: 422)]
     #[OA\Response(ref: "#/components/responses/UnexpectedException", response: 500)]
-    #[Route('/{planId}/profile', name: RouteName::CHANGE_PLAN_PROFILE, methods: ['PUT'])]
+    #[Route('/{planId}/profile', name: RouteName::CHANGE_PLAN_PROFILE, methods: ['PUT'], priority: 535)]
     public function changeProfile(
         ChangeProfileRequest $request,
         PlanService $planService,

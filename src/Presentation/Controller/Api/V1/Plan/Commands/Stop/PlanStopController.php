@@ -31,7 +31,7 @@ class PlanStopController extends ApiController
     #[OA\Response(ref: "#/components/responses/AuthorizationException", response: 403)]
     #[OA\Response(ref: "#/components/responses/NotFound", response: 404)]
     #[OA\Response(ref: "#/components/responses/UnexpectedException", response: 500)]
-    #[Route('/{planId}/stop', name: RouteName::STOP_PLAN, methods: ['PUT'])]
+    #[Route('/{planId}/stop', name: RouteName::STOP_PLAN, methods: ['PUT'], priority: 525)]
     public function changeProfile(
         Request $request,
         PlanService $planService,

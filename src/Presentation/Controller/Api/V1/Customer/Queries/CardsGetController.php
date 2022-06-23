@@ -26,7 +26,7 @@ class CardsGetController extends ApiController
         content: new OA\JsonContent(
             type: 'array',
             items: new OA\Items(ref: new Model(type: IssuedCard::class))
-        )
+        ),
     )]
     #[OA\Response(ref: "#/components/responses/AuthenticationException", response: 401)]
     #[OA\Response(ref: "#/components/responses/UnexpectedException", response: 500)]

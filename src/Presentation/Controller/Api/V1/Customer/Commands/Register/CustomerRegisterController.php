@@ -6,7 +6,7 @@ use App\Application\Services\CustomerService;
 use App\Config\Routing\RouteName;
 use App\Presentation\Controller\Api\V1\ApiController;
 use App\Presentation\Controller\Api\V1\Customer\Commands\Register\Input\RegisterCustomerRequest;
-use App\Presentation\Controller\Api\V1\Customer\Commands\Register\Input\RegisterRequest;
+use App\Presentation\Controller\Api\V1\Customer\Input\RegisterRequest;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\JsonResponse;

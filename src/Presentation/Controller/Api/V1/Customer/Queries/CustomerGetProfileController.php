@@ -4,7 +4,7 @@ namespace App\Presentation\Controller\Api\V1\Customer\Queries;
 
 use App\Config\Routing\RouteName;
 use App\Presentation\Controller\Api\V1\ApiController;
-use App\Presentation\Controller\Api\V1\Customer\Output\Profile;
+use App\Presentation\Controller\Api\V1\Customer\Output\CustomerProfile;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -19,7 +19,7 @@ class CustomerGetProfileController extends ApiController
      *
      * Returns profile.
      */
-    #[OA\Response(response: 200, description: 'Customer Profile', content: new OA\JsonContent(ref: new Model(type: Profile::class)))]
+    #[OA\Response(response: 200, description: 'Customer Profile', content: new OA\JsonContent(ref: new Model(type: CustomerProfile::class)))]
     #[OA\Response(ref: "#/components/responses/AuthenticationException", response: 401)]
     #[OA\Response(ref: "#/components/responses/AuthorizationException", response: 403)]
     #[OA\Response(ref: "#/components/responses/NotFound", response: 404)]
@@ -27,6 +27,6 @@ class CustomerGetProfileController extends ApiController
     #[Route('/profile', name: RouteName::CUSTOMER_PROFILE, methods: ['GET'], priority: 1010)]
     public function getProfile(): JsonResponse
     {
-        return $this->respond(Profile::of($this->getUser()));
+        return $this->respond(CustomerProfile::of($this->getUser()));
     }
 }

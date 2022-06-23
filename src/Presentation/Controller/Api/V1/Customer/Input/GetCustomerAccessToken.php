@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Presentation\Controller\Api\V1\Customer\Commands\GetToken\Input;
+namespace App\Presentation\Controller\Api\V1\Customer\Input;
 
 use OpenApi\Attributes as OA;
 

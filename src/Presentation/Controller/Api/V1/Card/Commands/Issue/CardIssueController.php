@@ -6,7 +6,7 @@ use App\Application\Services\CardService;
 use App\Config\Routing\RouteName;
 use App\Presentation\Controller\Api\V1\ApiController;
 use App\Presentation\Controller\Api\V1\Card\Commands\Issue\Input\IssueCardRequest;
-use App\Presentation\Controller\Api\V1\Card\Commands\Issue\Input\NewCard;
+use App\Presentation\Controller\Api\V1\Card\Input\NewCard;
 use App\Presentation\Controller\Api\V1\Card\Output\BusinessCard;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Attributes as OA;

@@ -32,7 +32,7 @@ class PlanAddController extends ApiController
     #[OA\Response(ref: "#/components/responses/AuthorizationException", response: 403)]
     #[OA\Response(ref: "#/components/responses/ValidationError", response: 422)]
     #[OA\Response(ref: "#/components/responses/UnexpectedException", response: 500)]
-    #[Route('', name: RouteName::ADD_PLAN, methods: ['POST'])]
+    #[Route('', name: RouteName::ADD_PLAN, methods: ['POST'], priority: 540)]
     public function add(
         AddPlanRequest $request,
         PlanService $planService,

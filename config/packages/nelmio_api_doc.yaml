@@ -62,9 +62,7 @@ nelmio_api_doc:
                                         description: Authorization Exception
                                         type: string
                                         nullable: false
-                                        example: >-
-                                            Subject <Subject Id> is not authorized for <Resource Type>
-                                            <Resource Id>
+                                        example: Subject <Subject Id> is not authorized for <Resource Type> <Resource Id>
                 UserAlreadyRegisteredException:
                     description: Bad Request
                     content:

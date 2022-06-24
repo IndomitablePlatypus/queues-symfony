@@ -8,6 +8,8 @@ use JsonSerializable;
 use OpenApi\Attributes as OA;
 
 #[OA\Schema(
+    title: "CustomerWorkspace",
+    description: "Customer Workspace",
     required: ['workspaceId', 'name', 'description', 'description']
 )]
 class CustomerWorkspace implements JsonSerializable

@@ -17,7 +17,6 @@ class RegisterCustomerRequest
 
         #[Assert\Type('string')]
         #[Assert\NotBlank]
-        #[Assert\NotCompromisedPassword]
         public ?string $password,
 
         #[Assert\Type('string')]

@@ -12,6 +12,7 @@ use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
+#[OA\Tag(name: 'Customer')]
 #[Route('/api/v1/customer/workspaces')]
 class WorkspacesGetController extends ApiController
 {
@@ -28,12 +29,8 @@ class WorkspacesGetController extends ApiController
             items: new OA\Items(ref: new Model(type: CustomerWorkspace::class))
         )
     )]
-    #[OA\Response(
-        ref: "#/components/responses/UnexpectedException",
-        response: 500,
-    )]
-    #[OA\Tag(name: 'customer')]
-    #[Route('', name: RouteName::CUSTOMER_WORKSPACES, methods: ['GET'])]
+    #[OA\Response(ref: "#/components/responses/UnexpectedException", response: 500)]
+    #[Route('', name: RouteName::CUSTOMER_WORKSPACES, methods: ['GET'], priority: 1020)]
     public function getWorkspaces(WorkspaceRepositoryInterface $workspaceRepository): JsonResponse
     {
         return $this->respond(CustomerWorkspaces::of(...$workspaceRepository->takeAll()));

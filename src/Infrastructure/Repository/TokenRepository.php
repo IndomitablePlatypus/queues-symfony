@@ -11,6 +11,7 @@ use App\Infrastructure\Exceptions\NotFoundException;
 use App\Infrastructure\Exceptions\ParameterAssertionException;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Throwable;
 
 class TokenRepository extends ServiceEntityRepository implements TokenRepositoryInterface
 {
@@ -21,9 +22,7 @@ class TokenRepository extends ServiceEntityRepository implements TokenRepository
 
     public function getToken(string $plainTextToken): Token
     {
-        /** @var Token $token */
-        $token = $this->find($this->getIdFromPlainTextToken($plainTextToken))
-            ?? throw new AuthenticationFailedException("Unknown token");
+        $token = $this->getTokenSafe($this->getIdFromPlainTextToken($plainTextToken));
         if (password_verify($this->getTokenStringFromPlainTextToken($plainTextToken), $token->getToken())) {
             return $token;
         }
@@ -43,9 +42,9 @@ class TokenRepository extends ServiceEntityRepository implements TokenRepository
         $tokenId = $this->findOneBy([
             'userId' => $userId,
             'name' => $tokenName,
-        ], ['createdAt' => 'DESC']) ?->getId();
+        ], ['createdAt' => 'DESC'])?->getId();
 
-        if($tokenId === null) {
+        if ($tokenId === null) {
             return;
         }
 
@@ -71,11 +70,11 @@ class TokenRepository extends ServiceEntityRepository implements TokenRepository
         ]);
     }
 
-    protected function getIdFromPlainTextToken(string $plainTextToken): string
+    protected function getIdFromPlainTextToken(string $plainTextToken): int
     {
         $parts = explode(Token::TOKEN_SEPARATOR, $plainTextToken);
-        $id = array_shift($parts);
-        if (empty($id)) {
+        $id = (int) array_shift($parts);
+        if ($id <= 0) {
             throw new ParameterAssertionException('Invalid token format');
         }
         return $id;
@@ -89,6 +88,17 @@ class TokenRepository extends ServiceEntityRepository implements TokenRepository
             throw new ParameterAssertionException('Invalid token format');
         }
         return $token;
+    }
+
+    protected function getTokenSafe(int $id): Token
+    {
+        try {
+            return $this->find($id) ?? throw new AuthenticationFailedException("Unknown token");
+        } catch (AuthenticationFailedException $exception) {
+            throw $exception;
+        } catch (Throwable $exception) {
+            throw new AuthenticationFailedException(message: "Invalid token format", previous: $exception);
+        }
     }
 
 }

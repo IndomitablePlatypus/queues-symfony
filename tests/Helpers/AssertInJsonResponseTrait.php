@@ -8,10 +8,10 @@ use Throwable;
 
 trait AssertInJsonResponseTrait
 {
-    public static function assertJsonResponseContainsKeys(array $expected): void
+    public function assertJsonResponseContainsKeys(array $expected): void
     {
         try {
-            $data = static::json();
+            $data = $this->json();
             foreach ($expected as $key) {
                 Assert::assertArrayHasKey($key, $data);
             }

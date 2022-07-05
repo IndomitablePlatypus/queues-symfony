@@ -6,8 +6,10 @@ use App\Infrastructure\Repository\UserRepository;
 
 trait RepositoriesTrait
 {
-    public static function getUserRepository(): UserRepository
+    protected UserRepository $userRepository;
+
+    public function getUserRepository(): UserRepository
     {
-        return static::getContainer()->get(UserRepository::class);
+        return $this->userRepository ?? $this->userRepository = $this->container->get(UserRepository::class);
     }
 }

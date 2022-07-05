@@ -11,12 +11,10 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
-use JetBrains\PhpStorm\ArrayShape;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use App\Domain\Entity\Relation;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`users`')]
@@ -136,9 +134,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getWorkspace(GenericIdInterface $workspaceId): Workspace
     {
-        $workspace = $this->workspaces->matching(
-            Criteria::create()->where(Criteria::expr()?->eq('id', (string) $workspaceId))
-        )->first();
+        $workspace = $this
+            ->workspaces
+            ->filter(fn(Workspace $workspace) => $workspaceId->equals($workspace->getId()))
+            ->first();
+
         return $workspace instanceof Workspace
             ? $workspace
             : throw new NotFoundException("Workspace $workspaceId not found");
@@ -153,19 +153,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this
             ->cards
-            ->matching(Criteria::create()
-                ->where(Criteria::expr()?->eq('revokedAt', null))
-            );
+            ->matching(Criteria::create()->where(Criteria::expr()?->eq('revokedAt', null)));
     }
 
     public function getCard(GenericIdInterface $cardId): Card
     {
         $card = $this
             ->cards
-            ->matching(Criteria::create()
-                ->where(Criteria::expr()?->eq('id', (string) $cardId))
-                ->andWhere(Criteria::expr()?->eq('revokedAt', null))
-            );
+            ->matching(Criteria::create()->where(Criteria::expr()?->eq('revokedAt', null)))
+            ->filter(fn(Card $card) => $cardId->equals($card->getId()))
+            ->first();
+
         return $card instanceof Card
             ? $card
             : throw new NotFoundException("Card $cardId not found");

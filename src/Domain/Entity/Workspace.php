@@ -101,7 +101,11 @@ class Workspace
 
     public function getPlan(GenericIdInterface $planId): Plan
     {
-        $plan = $this->plans->filter(fn($plan) => $planId->equals($plan->getId()))->first();
+        $plan = $this
+            ->plans
+            ->filter(fn($plan) => $planId->equals($plan->getId()))
+            ->first();
+
         return $plan instanceof Plan
             ? $plan
             : throw new NotFoundException("Plan $planId not found");

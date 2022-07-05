@@ -181,11 +181,12 @@ class Plan
 
     public function getRequirement(GenericIdInterface $requirementId): Requirement
     {
-        $requirement = $this->requirements->matching(
-            Criteria::create()
-                ->where(Criteria::expr()?->eq('id', (string) $requirementId))
-                ->andWhere(Criteria::expr()?->eq('removedAt', null))
-        )->first();
+        $requirement = $this
+            ->requirements
+            ->matching(Criteria::create()->where(Criteria::expr()?->eq('removedAt', null)))
+            ->filter(fn(Requirement $requirement) => $requirementId->equals($requirement->getId()))
+            ->first();
+
         return $requirement instanceof Requirement
             ? $requirement
             : throw new NotFoundException("Requirement $requirementId not found");
@@ -203,10 +204,10 @@ class Plan
 
     public function getCard(GenericIdInterface $cardId): ?Card
     {
-        $card = $this->cards->matching(
-            Criteria::create()
-                ->where(Criteria::expr()?->eq('id', (string) $cardId))
-        )->first();
+        $card = $this
+            ->cards
+            ->filter(fn($card) => $cardId->equals($card->getId()))
+            ->first();
         return $card ?: null;
     }
 

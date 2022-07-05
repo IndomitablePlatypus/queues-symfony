@@ -29,6 +29,10 @@ class PlansFixtures extends Fixture implements DependentFixtureInterface
             $plan = $self->makePlan($self->getWorkspace($workspaceName));
             $self->addReference($name, $plan);
             $manager->persist($plan);
+
+            $plan->addRequirement(GuidBasedImmutableId::make(), $self->faker()->sentence());
+            $plan->addRequirement(GuidBasedImmutableId::make(), $self->faker()->sentence());
+            $plan->addRequirement(GuidBasedImmutableId::make(), $self->faker()->sentence());
         },
             self::PLAN_NAMES,
             WorkspacesFixtures::WORKSPACE_NAMES,

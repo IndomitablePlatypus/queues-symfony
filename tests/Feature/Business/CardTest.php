@@ -4,6 +4,7 @@ namespace App\Tests\Feature\Business;
 
 use App\Config\Routing\RouteName;
 use App\Tests\BaseScenarioTest;
+use Symfony\Component\HttpFoundation\Response;
 
 class CardTest extends BaseScenarioTest
 {
@@ -56,6 +57,52 @@ class CardTest extends BaseScenarioTest
             ['planId' => $planId, 'customerId' => $customer->getId()]
         );
 
-        $this->assertResponseStatusCodeSame(404);
+        $this->assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
     }
+
+    public function test_card_is_satisfied_on_completion()
+    {
+        $collaborator = $this->getUserRepository()->findOneBy(['username' => 'collaborator1']);
+        $customer = $this->getUserRepository()->findOneBy(['username' => 'customer1']);
+
+        $this->tokenize($collaborator);
+
+        $workspaces = $this->rGet(RouteName::GET_WORKSPACES);
+        $workspaceId = $workspaces[0]['workspaceId'];
+
+        $plans = $this->rGet(RouteName::GET_PLANS, ['workspaceId' => $workspaceId]);
+        $planId = $plans[0]['planId'];
+
+        $card = $this->rPost(RouteName::ISSUE_CARD,
+            ['workspaceId' => $workspaceId],
+            ['planId' => $planId, 'customerId' => $customer->getId()]
+        );
+
+        $routeArgs = ['workspaceId' => $workspaceId, 'cardId' => $card['cardId']];
+
+        foreach ($card['requirements'] as $requirement) {
+            $this->rPost(RouteName::NOTE_ACHIEVEMENT, $routeArgs, [
+                'achievementId' => $requirement['requirementId'],
+                'description' => $requirement['description'],
+            ]);
+        }
+
+        $card = $this->rGet(RouteName::GET_CARD, $routeArgs);
+        $this->assertTrue($card['isSatisfied']);
+
+        $this->rPut(RouteName::BLOCK_CARD, $routeArgs);
+        $this->assertResponseIsSuccessful();
+
+        $this->rPut(RouteName::UNBLOCK_CARD, $routeArgs);
+        $this->assertResponseIsSuccessful();
+
+        $this->rPut(RouteName::COMPLETE_CARD, $routeArgs);
+
+        $card = $this->rGet(RouteName::GET_CARD, $routeArgs);
+        $this->assertTrue($card['isCompleted']);
+
+        $this->rPut(RouteName::BLOCK_CARD, $routeArgs);
+        $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
+    }
+
 }

@@ -13,7 +13,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 abstract class BaseScenarioTest extends WebTestCase
 {
-    use RequestTestTrait, ResponseTestTrait, RepositoriesTrait;
+    use ResponseTestTrait, RepositoriesTrait;
 
     protected KernelBrowser $client;
 
@@ -33,4 +33,29 @@ abstract class BaseScenarioTest extends WebTestCase
         $token = $this->container->get(TokenRepositoryInterface::class)->newToken($user, static::class);
         $this->token = $token->getPlainTextToken();
     }
+
+    protected function rGet(string $route, array $routeArgs = []): array
+    {
+        $this->request('get', $route, $routeArgs);
+        return $this->jsonResponse();
+    }
+
+    protected function rPost(string $route, array $routeArgs = [], array $params = []): array
+    {
+        $this->request('post', $route, $routeArgs, $params);
+        return $this->jsonResponse();
+    }
+
+    protected function rPut(string $route, array $routeArgs = [], array $params = []): array
+    {
+        $this->request('put', $route, $routeArgs, $params);
+        return $this->jsonResponse();
+    }
+
+    protected function rDelete(string $route, array $routeArgs = [], array $params = []): array
+    {
+        $this->request('delete', $route, $routeArgs, $params);
+        return $this->jsonResponse();
+    }
+
 }

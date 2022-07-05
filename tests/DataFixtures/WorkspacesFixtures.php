@@ -25,19 +25,24 @@ class WorkspacesFixtures extends Fixture implements DependentFixtureInterface
     {
         $self = $this;
 
-        array_map(static function ($name, $keeperName) use ($self, $manager): void {
-            $keeper = $self->getKeeper($keeperName);
+        array_map(static function ($name, $keeperName, $collaboratorName) use ($self, $manager): void {
+            $keeper = $self->getUser($keeperName);
 
             $workspace = $self->makeWorkspace($keeper);
             $manager->persist($workspace);
 
-            $relation = $self->makeRelation($keeper, $workspace);
+            $relation = $self->makeRelation($keeper, $workspace, RelationType::KEEPER());
+            $manager->persist($relation);
+
+            $collaborator = $self->getUser($collaboratorName);
+            $relation = $self->makeRelation($collaborator, $workspace, RelationType::MEMBER());
             $manager->persist($relation);
 
             $self->addReference($name, $workspace);
         },
             self::WORKSPACE_NAMES,
             UserFixtures::getKeeperNames(),
+            UserFixtures::getCollaboratorNames(),
         );
 
         $manager->flush();
@@ -50,7 +55,7 @@ class WorkspacesFixtures extends Fixture implements DependentFixtureInterface
         ];
     }
 
-    protected function getKeeper($name): User
+    protected function getUser($name): User
     {
         /** @var User $user */
         $user = $this->referenceRepository->getReference($name);
@@ -70,13 +75,13 @@ class WorkspacesFixtures extends Fixture implements DependentFixtureInterface
         );
     }
 
-    protected function makeRelation(User $keeper, Workspace $workspace): Relation
+    protected function makeRelation(User $collaborator, Workspace $workspace, RelationType $relation): Relation
     {
         return Relation::create(
             GuidBasedImmutableId::make(),
-            $keeper,
+            $collaborator,
             $workspace,
-            RelationType::KEEPER(),
+            $relation,
         );
     }
 }

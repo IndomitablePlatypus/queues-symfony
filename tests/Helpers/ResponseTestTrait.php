@@ -5,11 +5,35 @@ namespace App\Tests\Helpers;
 use JsonException;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\ExpectationFailedException;
+use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Throwable;
 
 trait ResponseTestTrait
 {
-    protected array $jsonResponse;
+    protected ?array $jsonResponse;
+
+    protected UrlGeneratorInterface $urlGenerator;
+
+    protected function urlGenerator(): UrlGeneratorInterface
+    {
+        return $this->urlGenerator ?? $this->urlGenerator = $this->container->get(UrlGeneratorInterface::class);
+    }
+
+    protected function generateURL(string $name, array $parameters = []): string
+    {
+        return $this->urlGenerator()->generate($name, $parameters);
+    }
+
+    protected function request(string $method, string $name, array $routeArgs = [], array $params = []): Crawler
+    {
+        $this->jsonResponse = null;
+        if (!empty($this->token)) {
+            $this->client->setServerParameter('HTTP_AUTHORIZATION', 'Bearer ' . $this->token);
+        }
+
+        return $this->client->request(strtoupper($method), $this->generateURL($name, $routeArgs), $params);
+    }
 
     protected function jsonResponse(): array
     {

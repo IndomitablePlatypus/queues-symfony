@@ -26,6 +26,11 @@ class UserFixtures extends Fixture
         return array_slice(self::USER_NAMES, 0, 2);
     }
 
+    public static function getCollaboratorNames(): array
+    {
+        return array_slice(self::USER_NAMES, 2, 2);
+    }
+
     public function load(ObjectManager $manager)
     {
         $self = $this;

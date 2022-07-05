@@ -3,47 +3,59 @@
 namespace App\Tests\Feature\Business;
 
 use App\Config\Routing\RouteName;
-use App\Domain\Entity\Plan;
-use App\Domain\Entity\Workspace;
 use App\Tests\BaseScenarioTest;
 
 class CardTest extends BaseScenarioTest
 {
     public function test_collaborator_can_issue_card(): void
     {
-        $keeper = $this->getUserRepository()->findOneBy(['username' => 'keeper1']);
+        $collaborator = $this->getUserRepository()->findOneBy(['username' => 'collaborator1']);
         $customer = $this->getUserRepository()->findOneBy(['username' => 'customer1']);
 
-        /** @var Workspace $workspace */
-        $workspace = $keeper->getWorkspaces()[0];
+        $this->tokenize($collaborator);
 
-        /** @var Plan $plan */
-        $plan = $workspace->getPlans()[0];
+        $workspaces = $this->rGet(RouteName::GET_WORKSPACES);
+        $workspaceId = $workspaces[0]['workspaceId'];
 
-        $this->tokenize($keeper);
+        $plans = $this->rGet(RouteName::GET_PLANS, ['workspaceId' => $workspaceId]);
+        $planId = $plans[0]['planId'];
 
-        $this->rPost(
-            RouteName::ISSUE_CARD,
-            ['workspaceId' => $workspace->getId()],
-            [
-                'customerId' => $customer->getId(),
-                'planId' => $plan->getId(),
-            ]
+        $card = $this->rPost(RouteName::ISSUE_CARD,
+            ['workspaceId' => $workspaceId],
+            ['planId' => $planId, 'customerId' => $customer->getId()]
         );
 
-        $this->assertResponseIsSuccessful();
-
-        $this->assertJsonResponseContainsKey('cardId');
-
-        $cardId = $this->responseValue('cardId');
+        $this->assertNotEmpty($card);
+        $this->assertEquals($card['customerId'], $customer->getId());
+        $this->assertEquals($card['planId'], $planId);
 
         $this->tokenize($customer);
         $this->rGet(RouteName::CUSTOMER_CARD, [
-            'workspaceId' => $workspace->getId(),
-            'cardId' => $cardId,
+            'workspaceId' => $workspaceId,
+            'cardId' => $card['cardId'],
         ]);
-
-        $this->assertResponseIsSuccessful();
     }
 
+    public function test_non_collaborator_cannot_issue_cards()
+    {
+        $keeper = $this->getUserRepository()->findOneBy(['username' => 'keeper1']);
+        $nonCollaborator = $this->getUserRepository()->findOneBy(['username' => 'collaborator2']);
+        $customer = $this->getUserRepository()->findOneBy(['username' => 'customer1']);
+
+        $this->tokenize($keeper);
+
+        $workspaces = $this->rGet(RouteName::GET_WORKSPACES);
+        $workspaceId = $workspaces[0]['workspaceId'];
+
+        $plans = $this->rGet(RouteName::GET_PLANS, ['workspaceId' => $workspaceId]);
+        $planId = $plans[0]['planId'];
+
+        $this->tokenize($nonCollaborator);
+        $this->rPost(RouteName::ISSUE_CARD,
+            ['workspaceId' => $workspaceId],
+            ['planId' => $planId, 'customerId' => $customer->getId()]
+        );
+
+        $this->assertResponseStatusCodeSame(404);
+    }
 }

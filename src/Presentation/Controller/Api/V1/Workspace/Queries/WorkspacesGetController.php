@@ -3,6 +3,8 @@
 namespace App\Presentation\Controller\Api\V1\Workspace\Queries;
 
 use App\Config\Routing\RouteName;
+use App\Domain\Contracts\CollaboratingWorkspaceRepositoryInterface;
+use App\Infrastructure\Support\GuidBasedImmutableId;
 use App\Presentation\Controller\Api\V1\ApiController;
 use App\Presentation\Controller\Api\V1\Workspace\Output\BusinessWorkspace;
 use App\Presentation\Controller\Api\V1\Workspace\Output\BusinessWorkspaces;
@@ -33,10 +35,11 @@ class WorkspacesGetController extends ApiController
     #[OA\Response(ref: "#/components/responses/AuthenticationException", response: 401)]
     #[OA\Response(ref: "#/components/responses/UnexpectedException", response: 500)]
     #[Route('', name: RouteName::GET_WORKSPACES, methods: ['GET'], priority: 1120)]
-    public function getWorkspaces(): JsonResponse
+    public function getWorkspaces(CollaboratingWorkspaceRepositoryInterface $collaboratingWorkspaceRepository): JsonResponse
     {
         return $this->respond(BusinessWorkspaces::of(
-            ...$this->getUser()->getWorkspaces()->toArray()
+            ...$collaboratingWorkspaceRepository
+            ->getCollaboratingWorkspaces($this->getUser()->getId())
         ));
     }
 }

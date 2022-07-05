@@ -11,7 +11,7 @@ use Throwable;
 
 trait ResponseTestTrait
 {
-    protected ?array $jsonResponse;
+    protected mixed $jsonResponse;
 
     protected UrlGeneratorInterface $urlGenerator;
 
@@ -35,7 +35,7 @@ trait ResponseTestTrait
         return $this->client->request(strtoupper($method), $this->generateURL($name, $routeArgs), $params);
     }
 
-    protected function jsonResponse(): array
+    protected function jsonResponse(): array|string
     {
         try {
             return $this->jsonResponse ?? $this->jsonResponse = json_decode($this->client->getResponse()->getContent(), true, flags: JSON_THROW_ON_ERROR);

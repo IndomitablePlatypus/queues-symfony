@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests;
+namespace App\Tests\Scenarios;
 
 use App\Domain\Contracts\TokenRepositoryInterface;
 use App\Domain\Entity\User;
@@ -34,25 +34,25 @@ abstract class BaseScenarioTest extends WebTestCase
         $this->token = $token->getPlainTextToken();
     }
 
-    protected function rGet(string $route, array $routeArgs = []): array
+    protected function rGet(string $route, array $routeArgs = []): array|string
     {
         $this->request('get', $route, $routeArgs);
         return $this->jsonResponse();
     }
 
-    protected function rPost(string $route, array $routeArgs = [], array $params = []): array
+    protected function rPost(string $route, array $routeArgs = [], array $params = []): array|string
     {
         $this->request('post', $route, $routeArgs, $params);
         return $this->jsonResponse();
     }
 
-    protected function rPut(string $route, array $routeArgs = [], array $params = []): array
+    protected function rPut(string $route, array $routeArgs = [], array $params = []): array|string
     {
         $this->request('put', $route, $routeArgs, $params);
         return $this->jsonResponse();
     }
 
-    protected function rDelete(string $route, array $routeArgs = [], array $params = []): array
+    protected function rDelete(string $route, array $routeArgs = [], array $params = []): array|string
     {
         $this->request('delete', $route, $routeArgs, $params);
         return $this->jsonResponse();

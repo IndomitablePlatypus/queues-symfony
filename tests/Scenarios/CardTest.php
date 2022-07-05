@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Tests\Feature\Business;
+namespace App\Tests\Scenarios;
 
 use App\Config\Routing\RouteName;
-use App\Tests\BaseScenarioTest;
 use Symfony\Component\HttpFoundation\Response;
 
 class CardTest extends BaseScenarioTest

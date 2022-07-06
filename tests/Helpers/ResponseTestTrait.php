@@ -6,6 +6,7 @@ use JsonException;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\ExpectationFailedException;
 use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Throwable;
 
@@ -66,5 +67,21 @@ trait ResponseTestTrait
     {
         $this->assertJsonResponseContainsKeys([$expected]);
     }
+
+    public function assertResponseCode(int $code): void
+    {
+        static::assertResponseStatusCodeSame($code);
+    }
+
+    public function assertNotFound(): void
+    {
+        static::assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
+    }
+
+    public function assertResponseSucceeded(): void
+    {
+        static::assertResponseIsSuccessful();
+    }
+
 
 }

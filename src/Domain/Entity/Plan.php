@@ -159,6 +159,9 @@ class Plan
         if ($this->archivedAt) {
             throw new LogicException('Cannot stop archived plan');
         }
+        if ($this->stoppedAt) {
+            throw new LogicException('Cannot stop stopped plan');
+        }
         $this->stoppedAt = self::now();
         $this->launchedAt = null;
         $this->expirationDate = null;

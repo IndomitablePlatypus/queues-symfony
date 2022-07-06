@@ -56,7 +56,7 @@ class CardTest extends BaseScenarioTest
             ['planId' => $planId, 'customerId' => $customer->getId()]
         );
 
-        $this->assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
+        $this->assertNotFound();
     }
 
     public function test_card_is_satisfied_on_completion()
@@ -90,10 +90,10 @@ class CardTest extends BaseScenarioTest
         $this->assertTrue($card['isSatisfied']);
 
         $this->rPut(RouteName::BLOCK_CARD, $routeArgs);
-        $this->assertResponseIsSuccessful();
+        $this->assertResponseSucceeded();
 
         $this->rPut(RouteName::UNBLOCK_CARD, $routeArgs);
-        $this->assertResponseIsSuccessful();
+        $this->assertResponseSucceeded();
 
         $this->rPut(RouteName::COMPLETE_CARD, $routeArgs);
 
@@ -101,7 +101,7 @@ class CardTest extends BaseScenarioTest
         $this->assertTrue($card['isCompleted']);
 
         $this->rPut(RouteName::BLOCK_CARD, $routeArgs);
-        $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
+        $this->assertResponseCode(Response::HTTP_BAD_REQUEST);
     }
 
 }

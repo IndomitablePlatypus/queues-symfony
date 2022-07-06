@@ -32,7 +32,7 @@ class CustomerTest extends BaseScenarioTest
             'deviceName' => $this->faker()->word(),
         ]);
 
-        $this->assertResponseIsSuccessful();
+        $this->assertResponseSucceeded();
 
         $token = $this->rPost(RouteName::GET_TOKEN, [], [
             'identity' => $identity,

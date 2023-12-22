@@ -46,7 +46,7 @@ class InviteDiscardController extends ApiController
         return $this->respond(
             (string) $collaborationService->discardInvite(
                 $this->getUser(),
-                GuidBasedImmutableId::of($request->attributes->get('workspaceId')),
+                GuidBasedImmutableId::of($request->attributes->get('inviteId')),
             )->getId()
         );
     }

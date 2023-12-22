@@ -17,7 +17,7 @@ interface GenericIdInterface extends JsonSerializable, Stringable
 
     public function is(string $id): bool;
 
-    public function jsonSerialize();
+    public function jsonSerialize(): mixed;
 
     public function __toString(): string;
 }

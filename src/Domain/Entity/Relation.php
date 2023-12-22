@@ -81,4 +81,9 @@ class Relation
     {
         return $this->workspace;
     }
+
+    public function getType(): RelationType
+    {
+        return RelationType::of($this->relationType);
+    }
 }

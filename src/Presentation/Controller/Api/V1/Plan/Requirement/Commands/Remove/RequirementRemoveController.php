@@ -8,6 +8,7 @@ use App\Presentation\Controller\Api\V1\ApiController;
 use App\Presentation\Controller\Api\V1\Plan\Input\RequirementProfile;
 use App\Presentation\Controller\Api\V1\Plan\Output\BusinessPlan;
 use App\Presentation\Controller\Api\V1\Plan\Requirement\Commands\Change\Input\ChangeRequirementRequest;
+use App\Presentation\Controller\Api\V1\Plan\Requirement\Commands\Remove\Input\RemoveRequirementRequest;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -35,7 +36,7 @@ class RequirementRemoveController extends ApiController
     #[OA\Response(ref: "#/components/responses/UnexpectedException", response: 500)]
     #[Route('', name: RouteName::REMOVE_PLAN_REQUIREMENT, methods: ['DELETE'], priority: 505)]
     public function remove(
-        ChangeRequirementRequest $request,
+        RemoveRequirementRequest $request,
         PlanService $planService,
         ConstraintViolationListInterface $validationErrors,
     ): JsonResponse {

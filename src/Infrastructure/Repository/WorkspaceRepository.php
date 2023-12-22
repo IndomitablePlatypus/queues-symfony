@@ -54,4 +54,16 @@ class WorkspaceRepository
         throw new NotFoundException("Workspace $workspaceId not found");
     }
 
+    public function getCollaboratingWorkspaces(GenericIdInterface $collaboratorId): array
+    {
+        $query = $this->_em->createQuery(
+            "SELECT w, r
+            FROM App\Domain\Entity\Workspace w 
+            INNER JOIN w.relations r
+            WHERE r.collaborator = :collaboratorId
+            "
+        )->setParameter(':collaboratorId', $collaboratorId);
+        return $query->getResult();
+    }
+
 }

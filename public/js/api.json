@@ -3,7 +3,7 @@
     "info": {
         "title": "Cardz Lite, Symfony edition",
         "description": "Bonus cards server-side application lite version",
-        "version": "0.1.1.70"
+        "version": "0.1.1.83"
     },
     "servers": [
         {

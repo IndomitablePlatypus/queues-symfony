@@ -11,4 +11,6 @@ interface RelationRepositoryInterface
     public function establish(Relation $relation): Relation;
 
     public function cease(GenericIdInterface $collaboratorId, GenericIdInterface $workspaceId, RelationType $relationType): void;
+
+    public function enquire(GenericIdInterface $collaboratorId, GenericIdInterface $workspaceId): ?RelationType;
 }

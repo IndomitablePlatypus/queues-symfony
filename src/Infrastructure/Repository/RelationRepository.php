@@ -36,4 +36,14 @@ class RelationRepository extends ServiceEntityRepository implements RelationRepo
             ->setParameter('relationType', (string) $relationType);
         $query->execute();
     }
+
+    public function enquire(GenericIdInterface $collaboratorId, GenericIdInterface $workspaceId): ?RelationType
+    {
+        /** @var ?Relation $relation */
+        $relation = $this->findOneBy([
+            'collaborator' => $collaboratorId,
+            'workspace' => $workspaceId,
+        ]);
+        return $relation?->getType();
+    }
 }
